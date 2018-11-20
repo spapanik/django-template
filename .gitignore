@@ -1,0 +1,14 @@
+# python
+__pycache__/
+requirements.txt
+
+# django
+local.py
+
+# translations
+*.mo
+
+# static
+/static/
+node_modules/
+js_requirements.txt

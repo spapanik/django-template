@@ -1,0 +1,17 @@
+[tool.black]
+py36 = true
+
+[tool.poetry]
+name = "{{project_name}}"
+version = "0.1.0"
+license = "MIT"
+authors = []
+
+[tool.poetry.dependencies]
+python = "^3.6"
+
+django = "~2.1"
+psycopg2 = "~2.7"
+
+[tool.poetry.dev-dependencies]
+black = "*"
