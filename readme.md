@@ -12,6 +12,6 @@ $ PROJ=<actual_project_name>
 $ git clone git@github.com:spapanik/django-template.git $PROJ
 $ cd $PROJ
 $ rm -rf .git
-$ find . ! -name "readme.md" -print0 | xargs -0 sed -i "s/{{project_name}}/$PROJ/g"
+$ find . -type f ! -name "readme.md" -print0 | xargs -0 sed -i "s/{{project_name}}/$PROJ/g"
 $ make install
 ```
