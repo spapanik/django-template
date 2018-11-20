@@ -13,5 +13,6 @@ python = "^3.6"
 django = "~2.1"
 psycopg2 = "~2.7"
 
+
 [tool.poetry.dev-dependencies]
-black = "*"
+black = {version = "*", allows-prereleases = true}
