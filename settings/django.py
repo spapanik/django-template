@@ -64,7 +64,7 @@ TEMPLATES = [
 
 # region Databases
 DATABASES = {
-    "default": {"ENGINE": "django.db.backends.postgresql", "NAME": "foobar"}
+    "default": {"ENGINE": "django.db.backends.postgresql", "NAME": "{{project_name}}"}
 }
 # endregion
 
