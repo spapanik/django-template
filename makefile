@@ -1,6 +1,7 @@
 COPYFLAGS = -n
-SETTINGS_MODULE = settings.local
-SETTINGS = --settings=$(SETTINGS_MODULE)
+SETTINGS = settings.local
+PYTHONPATH = $(CURDIR)
+ADMIN = DJANGO_SETTINGS_MODULE=$(SETTINGS) PYTHONPATH=$(PYTHONPATH) django-admin
 INPUT = --no-input
 INTERACTIVE = --non-interactive
 CSS_TYPE = nested
@@ -42,7 +43,7 @@ db:
 
 .PHONY: migrations
 migrations:
-	./manage.py migrate $(SETTINGS) $(INPUT)
+	$(ADMIN) migrate $(INPUT)
 
 poetry.lock: pyproject.toml
 	poetry lock
@@ -66,13 +67,13 @@ js_requirements.txt: yarn.lock
 
 .PHONY: staticfiles
 staticfiles:
-	python manage.py collectstatic $(SETTINGS) $(INPUT) -i "*.scss" $(STATIC_EXTRA)
+	$(ADMIN) collectstatic $(INPUT) -i "*.scss" $(STATIC_EXTRA)
 
 .PHONY: static
 static: js_requirements.txt css staticfiles
 
 locale/%/LC_MESSAGES/django.mo: locale/%/LC_MESSAGES/django.po
-	python manage.py compilemessages --locale=$*
+	$(ADMIN) compilemessages --locale=$*
 
 .PHONY: translations
 translations: $(MO_FILES)
