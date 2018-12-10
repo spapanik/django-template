@@ -33,6 +33,8 @@ fmt:
 .PHONY: clean
 clean:
 	find . -type f -name "*.orig" -delete
+	find . -type f -name "*.py[co]" -delete
+	find . -type d -name "__pycache__" -delete
 
 settings/local.py: settings/local.py.template
 	cp $(COPYFLAGS) $^ $@
