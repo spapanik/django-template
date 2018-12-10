@@ -1,6 +1,6 @@
 COPYFLAGS = -n
 SETTINGS = settings.local
-PYTHONPATH = $(CURDIR)
+PYTHONPATH = $(CURDIR)/src
 ADMIN = DJANGO_SETTINGS_MODULE=$(SETTINGS) PYTHONPATH=$(PYTHONPATH) django-admin
 INPUT = --no-input
 INTERACTIVE = --non-interactive
@@ -24,7 +24,7 @@ MO_FILES = $(foreach po_file,$(basename $(PO_FILES)),$(po_file).mo)
 update: requirements.txt migrations translations static
 
 .PHONY: install
-install: settings/local.py db update
+install: src/settings/local.py db update
 
 .PHONY: fmt
 fmt:
@@ -36,7 +36,7 @@ clean:
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
 
-settings/local.py: settings/local.py.template
+src/settings/local.py: src/settings/local.py.template
 	cp $(COPYFLAGS) $^ $@
 
 .PHONY: db

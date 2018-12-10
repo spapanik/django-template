@@ -1,6 +1,6 @@
-import os
+import pathlib
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = pathlib.Path(__file__).parent.parent.parent
 
 # region Security
 DEBUG = True
@@ -70,7 +70,7 @@ DATABASES = {
 # region Static filed
 STATIC_URL = "/static/"
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = BASE_DIR.joinpath("static")
 # endregion
 
 # region i18n/l10n
@@ -78,7 +78,7 @@ LANGUAGE_CODE = "en"
 
 LANGUAGES = (("en", "English"),)
 
-LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
+LOCALE_PATHS = (BASE_DIR.joinpath("locale"),)
 
 TIME_ZONE = "UTC"
 
