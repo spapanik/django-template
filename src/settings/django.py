@@ -1,6 +1,6 @@
 import pathlib
 
-BASE_DIR = pathlib.Path(__file__).parent.parent.parent
+BASE_DIR = pathlib.Path(__file__).parents[2]
 
 # region Security
 DEBUG = True
@@ -76,9 +76,9 @@ STATIC_ROOT = BASE_DIR.joinpath("static")
 # region i18n/l10n
 LANGUAGE_CODE = "en"
 
-LANGUAGES = (("en", "English"),)
+LANGUAGES = [("en", "English")]
 
-LOCALE_PATHS = (BASE_DIR.joinpath("locale"),)
+LOCALE_PATHS = [BASE_DIR.joinpath("locale")]
 
 TIME_ZONE = "UTC"
 
