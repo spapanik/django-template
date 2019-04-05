@@ -14,7 +14,7 @@ MO_FILES = $(foreach po_file,$(basename $(PO_FILES)),$(po_file).mo)
 # tl; dr version
 # make install: Install project from scratch
 # make update: Update requirements, migrations, translations, static files
-# make fmt: Format the project using black
+# make format: Format the project using black
 # make clean: Delete python caches, .orig files
 # make static: Build the necessary .js and .css files
 # make translations: Build the .mo files
@@ -26,8 +26,8 @@ update: requirements.txt migrations translations static
 .PHONY: install
 install: src/settings/local.py db update
 
-.PHONY: fmt
-fmt:
+.PHONY: format
+format:
 	black .
 
 .PHONY: clean
@@ -51,7 +51,7 @@ poetry.lock: pyproject.toml
 	poetry lock
 
 requirements.txt: poetry.lock
-	PIP_NO_BINARY="psycopg2" poetry install $(POETRY_EXTRA)
+	poetry install $(POETRY_EXTRA)
 	poetry show | awk '{print $$1"=="$$2}' > $@
 
 %.css: %.scss

@@ -1,5 +1,5 @@
 [tool.black]
-py36 = true
+target-version = ["py36", "py37", "py38"]
 
 [tool.poetry]
 name = "{{project_name}}"
@@ -10,8 +10,8 @@ authors = []
 [tool.poetry.dependencies]
 python = "^3.6"
 
-django = "~2.1"
-psycopg2 = "~2.7"
+django = "~2.2"
+psycopg2 = "~2.8"
 
 
 [tool.poetry.dev-dependencies]
