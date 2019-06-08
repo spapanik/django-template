@@ -29,6 +29,7 @@ install: src/settings/local.py db update
 .PHONY: format
 format:
 	black .
+	isort -rc .
 
 .PHONY: clean
 clean:

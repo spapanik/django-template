@@ -1,6 +1,13 @@
 [tool.black]
 target-version = ["py36", "py37", "py38"]
 
+[tool.isort]
+line_length = 88
+multi_line_output = 3
+include_trailing_comma = true
+known_tests = "tests"
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER", "TESTS"]
+
 [tool.poetry]
 name = "{{project_name}}"
 version = "0.1.0"
@@ -16,3 +23,4 @@ psycopg2 = "~2.8"
 
 [tool.poetry.dev-dependencies]
 black = {version = "*", allows-prereleases = true}
+isort = "^4.3"
