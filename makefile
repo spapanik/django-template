@@ -80,3 +80,7 @@ locale/%/LC_MESSAGES/django.mo: locale/%/LC_MESSAGES/django.po
 
 .PHONY: translations
 translations: $(MO_FILES)
+
+.PHONY: tests
+tests:
+	py.test $(TEST_FLAGS) $(TEST_PATH)
