@@ -1,1 +1,1 @@
-from settings.django import *
+from settings.django import *  # noqa: F401, F403
