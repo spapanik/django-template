@@ -24,6 +24,6 @@ psycopg2 = "~2.8"
 [tool.poetry.dev-dependencies]
 black = {version = "*", allows-prereleases = true}
 isort = "^4.3"
-pytest = "^4.6"
+pytest = "^5.2"
 pytest-django = "^3.5"
 factory_boy = "^2.12"
