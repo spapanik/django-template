@@ -1,0 +1,16 @@
+# cache
+__pycache__/
+.pytest_cache/
+
+# installation artifacts
+requirements.txt
+
+# static
+/static/
+
+# translations
+*.mo
+
+# templates
+env.json
+local.*

@@ -1,4 +1,3 @@
-COPYFLAGS = -n
 SETTINGS = settings.local
 PYTHONPATH = $(CURDIR)/src
 ADMIN = DJANGO_SETTINGS_MODULE=$(SETTINGS) PYTHONPATH=$(PYTHONPATH) django-admin
@@ -6,54 +5,60 @@ INPUT = --no-input
 INTERACTIVE = --non-interactive
 CSS_TYPE = nested
 
+TEST_FLAGS = -vv --reuse-db --cov=src
+TEST_PATH = tests
+
+DB_NAME = {{cookiecutter.db_name}}
+
 SCSS_FILES = $(wildcard */static/css/*.scss)
 CSS_FILES = $(foreach name,$(basename $(SCSS_FILES)),$(name).css)
 PO_FILES = $(wildcard locale/*/LC_MESSAGES/django.po)
 MO_FILES = $(foreach po_file,$(basename $(PO_FILES)),$(po_file).mo)
 
+CONF = $(subst template.,local.,$(shell find . -type f -name "template.*"))
+
+ifneq ("$(wildcard ./env.json)","")
+    USE_ENV = -j env.json
+endif
+
 # tl; dr version
 # make install: Install project from scratch
 # make update: Update requirements, migrations, translations, static files
-# make format: Format the project using black
-# make clean: Delete python caches, .orig files
+# make format: Format the project using black and isort
 # make static: Build the necessary .js and .css files
 # make translations: Build the .mo files
 
-
 .PHONY: update
-update: requirements.txt migrations translations static
+update: $(filter-out db, install)
 
 .PHONY: install
-install: src/settings/local.py db update
-
-.PHONY: format
-format:
-	isort -rc .
-	black .
-
-.PHONY: clean
-clean:
-	find . -type f -name "*.orig" -delete
-	find . -type f -name "*.py[co]" -delete
-	find . -type d -name "__pycache__" -delete
-
-src/settings/local.py: src/settings/local.py.template
-	cp $(COPYFLAGS) $^ $@
-
-.PHONY: db
-db:
-	createdb {{project_name}} 2> /dev/null || true
-
-.PHONY: migrations
-migrations:
-	$(ADMIN) migrate $(INPUT)
+install: requirements.txt configuration db migrations static
 
 poetry.lock: pyproject.toml
 	poetry lock
 
 requirements.txt: poetry.lock
 	poetry install $(POETRY_EXTRA)
-	poetry show | awk '{print $$1"=="$$2}' > $@
+	poetry export --without-hashes -f requirements.txt -o $@
+
+.PHONY: format
+format:
+	isort --recursive .
+	black .
+
+.PHONY: lint
+lint:
+	flake8 .
+	isort --check-only --recursive .
+	black --check .
+
+.PHONY: db
+db:
+	createdb $(DB_NAME) 2> /dev/null || true
+
+.PHONY: migrations
+migrations:
+	$(ADMIN) migrate $(INPUT)
 
 %.css: %.scss
 	sassc -t $(CSS_TYPE) $^ $@
@@ -74,6 +79,22 @@ staticfiles:
 
 .PHONY: static
 static: js_requirements.txt css staticfiles
+
+.PHONY: configuration
+configuration: $(CONF)
+
+src/settings/local.%: src/settings/template.%
+	test ! -f $@ || cp $@ $@.backup
+	yashiro -t $^ $(USE_ENV) > $@
+
+etc/nginx/servers/local.%: etc/nginx/servers/template.%
+	yashiro -t $^ $(USE_ENV) > $@
+
+etc/systemd/system/local.%: etc/systemd/system/template.%
+	yashiro -t $^ $(USE_ENV) > $@
+
+etc/tmpfiles.d/local.%: etc/tmpfiles.d/template.%
+	yashiro -t $^ $(USE_ENV) > $@
 
 locale/%/LC_MESSAGES/django.mo: locale/%/LC_MESSAGES/django.po
 	$(ADMIN) compilemessages --locale=$*

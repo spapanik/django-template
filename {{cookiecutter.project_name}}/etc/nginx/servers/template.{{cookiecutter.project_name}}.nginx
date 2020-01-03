@@ -1,0 +1,36 @@
+server {
+{% raw -%}
+	listen 80;
+	server_name {{server_name}};
+
+	return 301 https://{{server_name}}$request_uri;
+{%- endraw %}
+}
+
+server {
+{% raw %}
+	listen 443 ssl http2;
+	server_name {{server_name}};
+
+	ssl_certificate ssl/certs/{{server_name}}.crt;
+	ssl_certificate_key ssl/keys/{{server_name}}.key;
+
+	location /favicon.ico {
+		alias {{work_dir}}/static/core/images/favicon.ico;
+	}
+
+	location /static/ {
+		alias {{work_dir}}/static/;
+	}
+
+	location / {
+		proxy_redirect		off;
+		proxy_set_header	Host				$http_host;
+		proxy_set_header	X-Real-IP			$remote_addr;
+		proxy_set_header	X-Forwarded-For		$proxy_add_x_forwarded_for;
+		proxy_set_header	X-Forwarded-Proto	$scheme;
+
+{%- endraw %}
+		proxy_pass	http://unix:/run/{{cookiecutter.project_name}}/gunicorn.sock;
+	}
+}

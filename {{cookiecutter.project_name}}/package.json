@@ -1,0 +1,8 @@
+{
+  "name": "{{cookiecutter.project_name}}",
+  "version": "0.1.0",
+  "description": "{{cookiecutter.description}}",
+  "authors": [
+    "{{cookiecutter.main_author}}"
+  ]
+}

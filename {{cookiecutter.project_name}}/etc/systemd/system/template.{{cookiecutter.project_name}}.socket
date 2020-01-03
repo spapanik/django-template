@@ -1,0 +1,10 @@
+[Unit]
+{% raw -%}
+Description={{server_name}} socket
+{%- endraw %}
+
+[Socket]
+ListenStream=/run/{{cookiecutter.project_name}}/gunicorn.sock
+
+[Install]
+WantedBy=sockets.target
