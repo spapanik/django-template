@@ -5,7 +5,7 @@ INPUT = --no-input
 INTERACTIVE = --non-interactive
 CSS_TYPE = nested
 
-TEST_FLAGS = -vv --reuse-db --cov=src
+TEST_FLAGS = -vv --reuse-db --cov
 TEST_PATH = tests
 
 DB_NAME = {{cookiecutter.db_name}}
