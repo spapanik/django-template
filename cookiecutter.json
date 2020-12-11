@@ -1,6 +1,7 @@
 {
   "db_name": null,
   "description": null,
-  "main_author": null,
+  "author_name": null,
+  "author_email": null,
   "project_name": null
 }
