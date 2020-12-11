@@ -1,0 +1,197 @@
+# tl; dr version
+# yam install: Install project from scratch
+# yam update: Update requirements, migrations, and static files
+# yam format: Format the project using black and isort
+# yam lint: Check the linting rules
+# yam static: Build the necessary .js and .css files
+# yam translations: Build the .mo files
+
+["$globals"]
+vars = [
+    {"pytest_args" = "-vv --reuse-db --cov"},
+    {"pytest_path" = "tests/"},
+    {"poetry_extra" = ""},
+
+    {"pwd" = "$((pwd))"},
+    {"pythonpath" = "${pwd}/src"},
+    {"settings_file" = "${pythonpath}/settings/local.py"},
+    {"settings" = "settings.local"},
+
+    {"env_vars" = "DJANGO_SETTINGS_MODULE=${settings} PYTHONPATH=${pythonpath}"},
+    {"admin" = "${env_vars} django-admin"},
+    {"db_name" = "{{cookiecutter.db_name}}"},
+
+    {"css_style" = "expanded"},
+    {"css_map" = "--no-source-map"},
+    {"input" = "--no-input"},
+    {"interactive" = "--non-interactive"},
+    {"static_extra" = ""},
+    {"yarn_extra" = ""},
+
+    {"css_files" = "$((change_suffix .css '$((glob */static/css/*.scss))'))"},
+    {"mo_files" = "$((change_suffix .mo '$((glob locale/*/LC_MESSAGES/django.po))'))"},
+
+    {"use_env" = "$((ternary_if '$((exists ./env.json))' '-j env.json' ''))"},
+    {"etc" = "$((sub template. local. '$((glob etc/**/*template.*))'))"},
+    {"configuration" = "$((merge ${etc} ${settings_file}))"},
+]
+
+[all]
+alias = "install"
+
+[update]
+alias = "install"
+
+[install]
+phony = true
+keep_ts = true
+requires = [
+    "install_py",
+    "configuration",
+    "db",
+    "migrations",
+    "static",
+    "translations",
+]
+
+[install_py]
+phony = true
+keep_ts = true
+requires = [
+    "poetry.lock",
+]
+commands = [
+    "poetry install ${poetry_extra}",
+]
+
+[format]
+phony = true
+requires = ["install_py"]
+commands = [
+    "isort .",
+    "black .",
+]
+
+[lint]
+phony = true
+requires = ["install_py"]
+commands = [
+    "flake8 .",
+    "isort --check .",
+    "black --check .",
+]
+
+[tests]
+phony = true
+requires = ["install"]
+commands = [
+    "${env_vars} pytest ${pytest_args} ${pytest_path}",
+]
+
+["poetry.lock"]
+requires = ["pyproject.toml"]
+commands = [
+    "poetry lock && touch ${.target}",
+]
+
+[db]
+phony = true
+vars = [
+    {db_exists = "SELECT EXISTS (SELECT 1 FROM pg_database WHERE datname = '${db_name}')"},
+    {db_base = "template1"},
+]
+commands = [
+    """[][ $(psql -d ${db_base} -tAXc "${db_exists}") = "t" ] || createdb ${db_name}""",
+]
+
+[migrations]
+phony = true
+requires = [
+    "install_py",
+    "src/settings/local.py",
+    "db",
+]
+commands = [
+    "${admin} migrate ${input}",
+]
+
+[install_js]
+phony = true
+keep_ts = true
+requires = [
+    "yarn.lock",
+]
+commands = [
+    "yarn install ${interactive} ${yarn_extra}",
+]
+
+["yarn.lock"]
+requires = [
+    "package.json",
+]
+commands = [
+    "yarn generate-lock-entry > ${.requirements:0}",
+]
+
+[css]
+phony = true
+requires = [
+    "${css_files}",
+]
+
+['(?P<basename>.+)\.css']
+requires = [
+    "${parent}${prefix}template.${extension}",
+]
+commands = [
+	"sassc -s ${css_style} ${css_map} ${.requirements:0} ${.target}",
+]
+
+[staticfiles]
+phony = true
+requires = [
+    "install_py",
+    "src/settings/local.py",
+]
+commands = [
+    """${admin} collectstatic ${input} -i "*.scss" ${static_extra}""",
+]
+
+[static]
+phony = true
+requires = [
+    "install_js",
+    "css",
+    "staticfiles",
+]
+
+[translations]
+phony = true
+requires = [
+    "${mo_files}",
+]
+
+['locale/(?P<locale>.+)/LC_MESSAGES/django.mo']
+requires = [
+    "locale/${locale}/LC_MESSAGES/django.po",
+]
+commands = [
+    "${admin} compilemessages --locale=${locale}",
+]
+
+[configuration]
+phony = true
+requires = [
+    "${configuration}",
+]
+
+['(?P<parent>.+)(?P<prefix>(/.*\.|/))local\.(?P<extension>.+)']
+regex = true
+requires = [
+    "${parent}${prefix}template.${extension}",
+    "install_py",
+]
+commands = [
+    "test ! -f ${.target} || cp ${.target} ${.target}.backup",
+    "yashiro -t ${.requirements:0} ${use_env} > ${.target}",
+]
