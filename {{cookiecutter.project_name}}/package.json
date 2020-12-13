@@ -3,6 +3,6 @@
   "version": "0.1.0",
   "description": "{{cookiecutter.description}}",
   "authors": [
-    "{{cookiecutter.main_author}}"
+    "{{cookiecutter.author_name}} <{{cookiecutter.author_email}}>"
   ]
 }
