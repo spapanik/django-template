@@ -5,7 +5,7 @@ BASE_DIR = pathlib.Path(__file__).parents[2]
 # region Security
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["{% raw %}{{base_url}}{% endraw %}"]
 
 SECRET_KEY = "An insecure secret key for development"
 
