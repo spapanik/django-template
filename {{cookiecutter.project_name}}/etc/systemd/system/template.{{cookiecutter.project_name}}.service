@@ -1,7 +1,5 @@
 [Unit]
-{% raw -%}
-Description={{server_name}} server
-{%- endraw %}
+Description={{cookiecutter.project_name}} server
 Requires={{cookiecutter.project_name}}.socket
 After=network.target
 

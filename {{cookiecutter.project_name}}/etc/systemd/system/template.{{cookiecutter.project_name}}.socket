@@ -1,7 +1,5 @@
 [Unit]
-{% raw -%}
-Description={{server_name}} socket
-{%- endraw %}
+Description={{cookiecutter.project_name}} socket
 
 [Socket]
 ListenStream=/run/{{cookiecutter.project_name}}/gunicorn.sock
