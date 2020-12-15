@@ -19,7 +19,7 @@ vars = [
 
     {"env_vars" = "DJANGO_SETTINGS_MODULE=${settings} PYTHONPATH=${pythonpath}"},
     {"admin" = "${env_vars} django-admin"},
-    {"db_name" = "{{cookiecutter.db_name}}"},
+    {"db_name" = "{{cookiecutter.project_name}}"},
 
     {"css_style" = "expanded"},
     {"css_map" = "--no-source-map"},

@@ -63,7 +63,7 @@ TEMPLATES = [
 
 # region Databases
 DATABASES = {
-    "default": {"ENGINE": "django.db.backends.postgresql", "NAME": "{{cookiecutter.db_name}}"}
+    "default": {"ENGINE": "django.db.backends.postgresql", "NAME": "{{cookiecutter.project_name}}"}
 }
 # endregion
 
