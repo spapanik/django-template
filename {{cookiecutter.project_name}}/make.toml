@@ -144,7 +144,7 @@ requires = [
     "${parent}${prefix}template.${extension}",
 ]
 commands = [
-	"sassc -s ${css_style} ${css_map} ${.requirements:0} ${.target}",
+    "sass -s ${css_style} ${css_map} ${.requirements:0} ${.target}",
 ]
 
 [staticfiles]
