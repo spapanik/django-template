@@ -8,8 +8,8 @@
 
 ["$globals"]
 vars = [
-    {"pytest_args" = "-vv --cov --reuse-db"},
-    {"pytest_path" = "tests/"},
+    {"pytest_args" = ""},
+    {"pytest_path" = ""},
     {"poetry_extra" = ""},
 
     {"pwd" = "$((pwd))"},

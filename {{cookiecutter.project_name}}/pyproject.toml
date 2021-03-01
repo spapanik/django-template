@@ -13,6 +13,12 @@ known_tests = "tests"
 known_django = "django"
 sections = ["FUTURE", "STDLIB", "THIRDPARTY", "DJANGO", "FIRSTPARTY", "TESTS"]
 
+[tool.pytest.ini_options]
+addopts = "--cov -vv --reuse-db"
+testpaths = [
+    "tests",
+]
+
 [tool.coverage.run]
 source = ["src/"]
 omit = ["*/template*", "src/wsgi.py"]
