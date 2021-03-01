@@ -13,7 +13,7 @@ known_tests = "tests"
 known_django = "django"
 sections = ["FUTURE", "STDLIB", "THIRDPARTY", "DJANGO", "FIRSTPARTY", "TESTS"]
 
-[tool.coverage.paths]
+[tool.coverage.run]
 source = ["src/"]
 
 [tool.poetry]
