@@ -15,6 +15,7 @@ sections = ["FUTURE", "STDLIB", "THIRDPARTY", "DJANGO", "FIRSTPARTY", "TESTS"]
 
 [tool.coverage.run]
 source = ["src/"]
+omit = ["*/template*", "src/wsgi.py"]
 
 [tool.poetry]
 name = "{{cookiecutter.project_name}}"
