@@ -1,9 +1,11 @@
 # cache
 __pycache__/
+.mypy_cache/
 .pytest_cache/
-
-# installation artifacts
-requirements.txt
+.coverage
+.yamk/
+__pycache__/
+.pytest_cache/
 
 # static
 /static/
