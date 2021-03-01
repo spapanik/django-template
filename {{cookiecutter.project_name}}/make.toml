@@ -76,9 +76,10 @@ commands = [
 phony = true
 requires = ["install_py"]
 commands = [
-    "flake8 .",
     "isort --check .",
     "black --check .",
+    "flake8 .",
+    "mypy .",
 ]
 
 [tests]
