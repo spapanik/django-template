@@ -1,18 +1,20 @@
 # cache
 __pycache__/
 .mypy_cache/
+
+# testing
 .pytest_cache/
+htmlcov/
 .coverage
+
+# installation specific files
+env.json
+local.*
 .yamk/
-__pycache__/
-.pytest_cache/
+make.toml.d/
 
 # static
 /static/
 
 # translations
 *.mo
-
-# templates
-env.json
-local.*
