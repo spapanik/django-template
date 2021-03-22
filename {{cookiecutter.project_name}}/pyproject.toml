@@ -21,7 +21,12 @@ testpaths = [
 
 [tool.coverage.run]
 source = ["src/"]
-omit = ["*/template*", "src/wsgi.py"]
+omit = [
+    "*/template*",
+    "src/wsgi.py",
+    "*/app.py",
+    "*/migrations/*",
+]
 
 [tool.poetry]
 name = "{{cookiecutter.project_name}}"
