@@ -8,32 +8,28 @@
 
 ["$globals"]
 vars = [
-    {"pytest_args" = ""},
-    {"pytest_path" = ""},
-    {"poetry_extra" = ""},
+    {pwd = "$((pwd))"},
+    {pythonpath = "${pwd}/src"},
+    {settings_file = "${pythonpath}/settings/local.py"},
+    {settings = "settings.local"},
 
-    {"pwd" = "$((pwd))"},
-    {"pythonpath" = "${pwd}/src"},
-    {"settings_file" = "${pythonpath}/settings/local.py"},
-    {"settings" = "settings.local"},
+    {env_vars = "DJANGO_SETTINGS_MODULE=${settings} PYTHONPATH=${pythonpath}"},
+    {admin = "${env_vars} django-admin"},
+    {db_name = "{{cookiecutter.project_name}}"},
 
-    {"env_vars" = "DJANGO_SETTINGS_MODULE=${settings} PYTHONPATH=${pythonpath}"},
-    {"admin" = "${env_vars} django-admin"},
-    {"db_name" = "{{cookiecutter.project_name}}"},
+    {css_style = "expanded"},
+    {css_map = "--no-source-map"},
+    {input = "--no-input"},
+    {interactive = "--non-interactive"},
 
-    {"css_style" = "expanded"},
-    {"css_map" = "--no-source-map"},
-    {"input" = "--no-input"},
-    {"interactive" = "--non-interactive"},
-    {"static_extra" = ""},
-    {"yarn_extra" = ""},
+    {css_files = "$((change_suffix .css '$((glob */static/css/*.scss))'))"},
+    {mo_files = "$((change_suffix .mo '$((glob locale/*/LC_MESSAGES/django.po))'))"},
 
-    {"css_files" = "$((change_suffix .css '$((glob */static/css/*.scss))'))"},
-    {"mo_files" = "$((change_suffix .mo '$((glob locale/*/LC_MESSAGES/django.po))'))"},
-
-    {"use_env" = "$((ternary_if '$((exists ./env.json))' '-j env.json' ''))"},
-    {"etc" = "$((sub template. local. '$((glob etc/**/*template.*))'))"},
-    {"configuration" = "$((merge ${etc} ${settings_file}))"},
+    {env_file = "./env.toml"},
+    {use_env = "$((ternary_if '$((exists ./${env_file}))' '-o ${env_file}' ''))"},
+    {etc = "$((sub template. local. '$((glob etc/**/*template.*))'))"},
+    {migration_dirs = "$((glob src/**/migrations))"},
+    {configuration = "$((merge ${etc} ${settings_file}))"},
 ]
 
 [all]
@@ -80,6 +76,7 @@ commands = [
     "black --check .",
     "flake8 .",
     "mypy .",
+    "${admin} makemigrations --check --dry-run",
 ]
 
 [tests]
@@ -97,18 +94,21 @@ commands = [
 
 [db]
 phony = true
+exists_only = true
 vars = [
     {db_exists = "SELECT EXISTS (SELECT 1 FROM pg_database WHERE datname = '${db_name}')"},
     {db_base = "template1"},
 ]
+existence_command = """[ $(psql -d ${db_base} -tAXc "${db_exists}") = "t" ]"""
 commands = [
-    """[][ $(psql -d ${db_base} -tAXc "${db_exists}") = "t" ] || createdb ${db_name}""",
+    "createdb ${db_name}",
 ]
 
 [migrations]
 phony = true
 requires = [
     "install_py",
+    "${migration_dirs}",
     "src/settings/local.py",
     "db",
 ]
