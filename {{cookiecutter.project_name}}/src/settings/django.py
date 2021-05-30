@@ -3,12 +3,6 @@ import pathlib
 BASE_DIR = pathlib.Path(__file__).parents[2]
 
 # region Security
-DEBUG = True
-
-ALLOWED_HOSTS = [""]
-
-SECRET_KEY = "An insecure secret key for development"
-
 validation = "django.contrib.auth.password_validation"
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -17,12 +11,20 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": f"{validation}.CommonPasswordValidator"},
     {"NAME": f"{validation}.NumericPasswordValidator"},
 ]
+
+SECURE_PROXY_SSL_HEADER = "HTTP_X_FORWARDED_PROTO", "https"
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 604800
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 # endregion
 
 # region Application definition
-ROOT_URLCONF = "urls"
+ROOT_URLCONF = "{{cookiecutter.project_name}}.urls"
 
-WSGI_APPLICATION = "wsgi.application"
+WSGI_APPLICATION = "{{cookiecutter.project_name}}.wsgi.application"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
