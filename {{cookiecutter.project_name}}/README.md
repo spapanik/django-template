@@ -3,8 +3,8 @@
 </p>
 
 We assume that the following are already installed in the system:
-* sassc
+* dart-sass
 * postgres
 * yarn
-* npm
+* yamk
 * poetry
