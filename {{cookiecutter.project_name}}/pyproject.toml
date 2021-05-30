@@ -14,8 +14,10 @@ known_django = "django"
 sections = ["FUTURE", "STDLIB", "THIRDPARTY", "DJANGO", "FIRSTPARTY", "TESTS"]
 
 [tool.pytest.ini_options]
-addopts = "-vv --reuse-db --random-order"
-testpaths = "tests"
+addopts = "-vv --reuse-db"
+testpaths = [
+    "tests",
+]
 
 [tool.poetry]
 name = "{{cookiecutter.project_name}}"
