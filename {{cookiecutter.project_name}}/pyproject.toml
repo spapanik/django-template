@@ -3,7 +3,7 @@ requires = ["poetry>=1.0.0"]
 build-backend = "poetry.masonry.api"
 
 [tool.black]
-target-version = ["py38"]
+target-version = ["py39"]
 
 [tool.isort]
 line_length = 88
@@ -15,9 +15,7 @@ sections = ["FUTURE", "STDLIB", "THIRDPARTY", "DJANGO", "FIRSTPARTY", "TESTS"]
 
 [tool.pytest.ini_options]
 addopts = "-vv --reuse-db"
-testpaths = [
-    "tests",
-]
+testpaths = "tests"
 
 [tool.poetry]
 name = "{{cookiecutter.project_name}}"
@@ -54,6 +52,7 @@ ipython = "^7.23.0"
 ipdb = "^0.13.0"
 
 django-extensions = "^3.1.0"
+django-debug-toolbar = "^3.2"
 werkzeug = "^2.0.0"
 
 flake8 = "^3.9.0"
