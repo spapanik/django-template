@@ -1,2 +1,1 @@
 DJANGO_SETTINGS_MODULE=settings.local
-PYTHONPATH=${PWD}/src
