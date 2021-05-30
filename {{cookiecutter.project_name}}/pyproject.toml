@@ -28,7 +28,7 @@ authors = [
 ]
 
 packages = [
-    {include = "lib", from = "src"},
+    {include = "{{cookiecutter.project_name}}", from = "src"},
     {include = "settings", from = "src"},
 ]
 
