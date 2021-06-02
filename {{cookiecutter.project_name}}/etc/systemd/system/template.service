@@ -1,27 +1,25 @@
+{% raw -%}
 [Unit]
-Description={{cookiecutter.project_name}} server
-Requires={{cookiecutter.project_name}}.socket
+Description={{service_name}} server
+Requires={{service_name}}.socket
 After=network.target
 
 [Service]
-{% raw -%}
 Environment=DJANGO_SETTINGS_MODULE=settings.local
 Environment=PYTHONPATH={{work_dir}}/src
-{%- endraw %}
-PIDFile=/run/{{cookiecutter.project_name}}/gunicorn.pid
-{% raw -%}
+PIDFile=/run/{{service_name}}/gunicorn.pid
 User={{user}}
 Group={{group}}
 Restart=on-failure
 WorkingDirectory={{work_dir}}
 ExecStart={{venv_dir}}/bin/gunicorn \
-{%- endraw %}
-          --pid /run/{{cookiecutter.project_name}}/gunicorn.pid \
-          --bind unix:/run/{{cookiecutter.project_name}}/gunicorn.sock \
-          wsgi:application
+          --pid /run/{{service_name}}/gunicorn.pid \
+          --bind unix:/run/{{service_name}}/gunicorn.sock \
+          sigil.wsgi:application
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
 PrivateTmp=true
 
 [Install]
 WantedBy=multi-user.target
+{%- endraw %}

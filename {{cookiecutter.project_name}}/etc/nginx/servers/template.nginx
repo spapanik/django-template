@@ -1,14 +1,12 @@
-server {
 {% raw -%}
+server {
 	listen 80;
 	server_name {{base_url}};
 
 	return 301 https://{{base_url}}$request_uri;
-{%- endraw %}
 }
 
 server {
-{% raw %}
 	listen 443 ssl http2;
 	server_name {{base_url}};
 
@@ -32,8 +30,8 @@ server {
 		{%- if dev %}
 		proxy_pass          http://localhost:8000;
 		{%- else %}
-		proxy_pass          http://unix:/run/{{cookiecutter.project_name}}/gunicorn.sock;
+		proxy_pass          http://unix:/run/{{service_name}}/gunicorn.sock;
 		{%- endif %}
-{%- endraw %}
 	}
 }
+{%- endraw %}
