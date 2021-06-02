@@ -22,9 +22,9 @@ SECURE_HSTS_PRELOAD = True
 # endregion
 
 # region Application definition
-ROOT_URLCONF = "{{cookiecutter.project_name}}.urls"
+ROOT_URLCONF = "sigil.urls"
 
-WSGI_APPLICATION = "{{cookiecutter.project_name}}.wsgi.application"
+WSGI_APPLICATION = "sigil.wsgi.application"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "{{cookiecutter.project_name}}",
+    "sigil",
 ]
 
 MIDDLEWARE = [
