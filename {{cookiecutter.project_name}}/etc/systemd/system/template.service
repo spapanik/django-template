@@ -6,7 +6,6 @@ After=network.target
 
 [Service]
 Environment=DJANGO_SETTINGS_MODULE=settings.local
-Environment=PYTHONPATH={{work_dir}}/src
 PIDFile=/run/{{service_name}}/gunicorn.pid
 User={{user}}
 Group={{group}}
