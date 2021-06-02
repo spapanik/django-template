@@ -77,7 +77,7 @@ DATABASES = {
 # region Static filed
 STATIC_URL = "/static/"
 
-STATIC_ROOT = BASE_DIR.joinpath("static")
+STATIC_ROOT = BASE_DIR.joinpath(".static")
 # endregion
 
 # region i18n/l10n
