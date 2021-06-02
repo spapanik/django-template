@@ -27,6 +27,7 @@ authors = [
 ]
 
 packages = [
+    {include = "lib", from = "src"},
     {include = "sigil", from = "src"},
     {include = "settings", from = "src"},
 ]
