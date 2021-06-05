@@ -150,8 +150,9 @@ requires = [
 ]
 
 ['(?P<basename>.+)\.css']
+regex = true
 requires = [
-    "${parent}${prefix}template.${extension}",
+    "${basename}.scss",
 ]
 commands = [
     "sass -s ${css_style} ${css_map} ${.requirements:0} ${.target}",
@@ -182,6 +183,7 @@ requires = [
 ]
 
 ['locale/(?P<locale>.+)/LC_MESSAGES/django.mo']
+regex = true
 requires = [
     "locale/${locale}/LC_MESSAGES/django.po",
 ]
