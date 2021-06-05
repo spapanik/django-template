@@ -22,8 +22,10 @@ vars = [
     {input = "--no-input"},
     {interactive = "--non-interactive"},
 
-    {css_files = "$((change_suffix '$((glob **/static/css/*.scss))' .css))"},
-    {mo_files = "$((change_suffix '$((glob locale/**/LC_MESSAGES/django.po))' .mo))"},
+    {scss_files = "$((glob **/static/*/css/*.scss))"},
+    {css_files = "$((change_suffix ${scss_files} .css))"},
+    {po_files = "$((glob locale/**/LC_MESSAGES/django.po))"},
+    {mo_files = "$((change_suffix ${po_files} .mo))"},
 
     {env_file = "./env.toml"},
     {use_env = "$((ternary_if '$((exists ./${env_file}))' '-o ${env_file}' ''))"},
