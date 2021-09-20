@@ -14,12 +14,12 @@ known_django = "django"
 sections = ["FUTURE", "STDLIB", "THIRDPARTY", "DJANGO", "FIRSTPARTY", "TESTS"]
 
 [tool.mypy]
-ignore_missing_imports = True
-strict_optional = False
-warn_return_any = True
-warn_redundant_casts = True
-warn_unused_ignores = True
-warn_unreachable = True
+ignore_missing_imports = true
+strict_optional = false
+warn_return_any = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_unreachable = true
 
 [tool.pytest.ini_options]
 addopts = "-vv --reuse-db"
@@ -36,8 +36,10 @@ authors = [
 
 packages = [
     {include = "lib", from = "src"},
-    {include = "sigil", from = "src"},
     {include = "settings", from = "src"},
+    {include = "urls.py", from = "src"},
+    {include = "urls_dev.py", from = "src"},
+    {include = "wsgi.py", from = "src"},
 ]
 
 

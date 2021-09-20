@@ -2,7 +2,7 @@ from settings.common import *  # noqa: F401, F403
 
 DEBUG = True
 
-ROOT_URLCONF = "sigil.urls_dev"
+ROOT_URLCONF = "urls_dev"
 ALLOWED_HOSTS = ["*"]
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"

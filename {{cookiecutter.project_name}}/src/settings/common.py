@@ -22,9 +22,7 @@ SECURE_HSTS_PRELOAD = True
 # endregion
 
 # region Application definition
-ROOT_URLCONF = "sigil.urls"
-
-WSGI_APPLICATION = "sigil.wsgi.application"
+WSGI_APPLICATION = "wsgi.application"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -33,7 +31,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "sigil",
+    "lib",
 ]
 
 MIDDLEWARE = [
@@ -64,7 +62,6 @@ TEMPLATES = [
 ]
 
 LOGIN_REDIRECT_URL = "/"
-
 LOGOUT_REDIRECT_URL = "/"
 # endregion
 
