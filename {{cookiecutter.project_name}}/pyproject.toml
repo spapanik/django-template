@@ -37,6 +37,7 @@ authors = [
 packages = [
     {include = "lib", from = "src"},
     {include = "settings", from = "src"},
+    {include = "asgi.py", from = "src"},
     {include = "urls.py", from = "src"},
     {include = "urls_dev.py", from = "src"},
     {include = "wsgi.py", from = "src"},
