@@ -11,6 +11,7 @@ make.toml.d/
 
 # static
 /.static/
+/node_modules/
 
 # translations
 *.mo
