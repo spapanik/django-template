@@ -22,6 +22,7 @@ SECURE_HSTS_PRELOAD = True
 # endregion
 
 # region Application definition
+ROOT_URLCONF = "urls"
 WSGI_APPLICATION = "wsgi.application"
 
 INSTALLED_APPS = [
