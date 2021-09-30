@@ -35,6 +35,7 @@ authors = [
 ]
 
 packages = [
+    {include = "home", from = "src"},
     {include = "lib", from = "src"},
     {include = "settings", from = "src"},
     {include = "asgi.py", from = "src"},

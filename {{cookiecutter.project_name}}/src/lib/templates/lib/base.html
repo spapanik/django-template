@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>{% block title %}{% endblock title %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block description %}{% endblock description %}">
+    <meta name="author" content="{% block author %}{% endblock author %}">
+
+    <link rel="icon" href="{% static 'lib/images/favicon.ico' %}">
+
+    {% block css %}
+        {% block css_extra %}{% endblock %}
+    {% endblock %}
+
+    {% block javascript %}
+        {% block javascript_extra %}{% endblock %}
+    {% endblock %}
+
+</head>
+
+<body>
+{% block body %}
+    <header>
+        {% block header %}
+            {% include 'lib/base_header.html' %}
+        {% endblock %}
+    </header>
+
+    <main>
+        {% block main_body %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        {% block footer %}
+            {% include 'lib/base_footer.html' %}
+        {% endblock %}
+    </footer>
+{% endblock %}
+</body>
+</html>
+
