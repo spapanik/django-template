@@ -96,12 +96,12 @@ commands = [
 
 [db]
 phony = true
+keep_ts = true
+exists_only = true
 vars = [
     {db_exists = "SELECT EXISTS (SELECT 1 FROM pg_database WHERE datname = '${db_name}')"},
     {db_base = "template1"},
 ]
-keep_ts = true
-exists_only = true
 existence_command = """[ $(psql -d ${db_base} -tAXc "${db_exists}") = "t" ]"""
 commands = [
     "createdb ${db_name}",
