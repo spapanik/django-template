@@ -6,15 +6,17 @@ After=network.target
 
 [Service]
 Environment=DJANGO_SETTINGS_MODULE=settings.local
-PIDFile=/run/{{service_name}}/gunicorn.pid
+PIDFile=/run/{{service_name}}/{{service_name}}.pid
 User={{user}}
 Group={{group}}
 Restart=on-failure
 WorkingDirectory={{work_dir}}
 ExecStart={{venv_dir}}/bin/gunicorn \
-          --pid /run/{{service_name}}/gunicorn.pid \
-          --bind unix:/run/{{service_name}}/gunicorn.sock \
-          sigil.wsgi:application
+          --pid /run/{{service_name}}/{{service_name}}.pid \
+          --bind unix:/run/{{service_name}}/{{service_name}}.sock \
+          --worker-class uvicorn.workers.UvicornWorker \
+          --workers 5 \
+          asgi:application
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
 PrivateTmp=true

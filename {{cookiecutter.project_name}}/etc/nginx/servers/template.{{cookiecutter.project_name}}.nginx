@@ -14,7 +14,7 @@ server {
 	ssl_certificate_key ssl/keys/{{server_name}}.key;
 
 	location /favicon.ico {
-		alias {{work_dir}}/.static/sigil/images/favicon.ico;
+		alias {{work_dir}}/.static/lib/images/favicon.ico;
 	}
 
 	location /static/ {
@@ -30,7 +30,7 @@ server {
 		{%- if dev %}
 		proxy_pass          http://localhost:8000;
 		{%- else %}
-		proxy_pass          http://unix:/run/{{service_name}}/gunicorn.sock;
+		proxy_pass          http://unix:/run/{{service_name}}/{{service_name}}.sock;
 		{%- endif %}
 	}
 }
