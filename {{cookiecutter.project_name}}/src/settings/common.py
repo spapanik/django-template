@@ -73,7 +73,7 @@ DATABASES = {
 }
 # endregion
 
-# region Static filed
+# region Static files
 STATIC_URL = "/static/"
 
 STATIC_ROOT = BASE_DIR.joinpath(".static")
