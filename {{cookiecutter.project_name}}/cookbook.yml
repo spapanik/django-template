@@ -16,7 +16,7 @@ $globals:
     - po_files: $((glob locale/**/LC_MESSAGES/django.po))
     - mo_files: $((change_suffix ${po_files} .mo))
     - env_file: ./env.toml
-    - use_env: $((ternary_if '$((exists ./${env_file}))' '-o ${env_file}' ''))
+    - use_env: $((ternary_if '$((exists ./${env_file}))' '-m ${env_file}' ''))
     - etc: $((sub template. local. '$((glob etc/**/*template.*))'))
     - migration_dirs: $((glob src/**/migrations))
     - configuration: $((merge ${etc} ${settings_file}))
