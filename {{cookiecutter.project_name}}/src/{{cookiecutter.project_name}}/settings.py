@@ -53,8 +53,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "{{cookiecutter.project_name}}.home",
+    "{{cookiecutter.project_name}}.lib",
     "{{cookiecutter.project_name}}.registration",
+    "{{cookiecutter.project_name}}.home",
 ]
 
 if DEBUG:
