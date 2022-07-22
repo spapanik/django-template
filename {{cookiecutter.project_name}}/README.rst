@@ -1,6 +1,6 @@
-===
-bmk
-===
+=======
+{{cookiecutter.project_name}}
+=======
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
   :alt: Code style
@@ -14,7 +14,7 @@ External tools
 
 Most of the tools described here are optional, feel free to change them if this suits your needs better.
 
-From external services running, bmk requires a reverse proxy to be running, like nginx, and postgresql to be up and running.
+From external services running, {{cookiecutter.project_name}} requires a reverse proxy to be running, like nginx, and postgresql to be up and running.
 
 Because the server requires a specific python, that might not be the one that the operating system uses, we recommend `pyenv`_ to be installed.
 From python packages outside the virtualenv, the project also requires `poetry`_ and `yamk`_ to be installed. There is the possibility to add them in the virtualenv, but this may create conflicts with their dependencies.
@@ -48,8 +48,8 @@ Although poetry does create a virtual env, all the commands assume the existence
 
     $ pyenv install 3.10.0
     $ pyenv shell 3.10.0
-    $ python -m venv ~/.local/share/venv/bmk
-    $ . ~/.local/share/venv/bmk
+    $ python -m venv ~/.local/share/venv/{{cookiecutter.project_name}}
+    $ . ~/.local/share/venv/{{cookiecutter.project_name}}
 
 
 If everything is present, the only thing that needs to be done is to use yam to install the project:
@@ -76,7 +76,7 @@ After the first installation, you can start the server by visiting the cloned re
 
 .. code-block:: console
 
-    $ . ~/.local/share/venvs/bmk/bin/activate  # or the name of the virtualenv
+    $ . ~/.local/share/venvs/{{cookiecutter.project_name}}/bin/activate  # or the name of the virtualenv
     $ django-admin runserver_plus
 
 There is hot reloading, and yam takes care of all the dependencies issues. If there are unapplied migrations, you can apply them by:
@@ -92,7 +92,7 @@ To run the local django shell, if you're inside the virtual environment, you can
 
 .. code-block:: console
 
-    $ . ~/.local/share/venvs/bmk/bin/activate  # or the name of the virtualenv
+    $ . ~/.local/share/venvs/{{cookiecutter.project_name}}/bin/activate  # or the name of the virtualenv
     $ django-admin shell_plus
 
 Formatting
