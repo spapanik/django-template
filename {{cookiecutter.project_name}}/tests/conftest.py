@@ -10,5 +10,5 @@ class HttpTestClient(Client):
 
 
 @fixture
-def http_client():
+def http_client() -> HttpTestClient:
     return HttpTestClient()
