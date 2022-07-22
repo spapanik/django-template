@@ -117,5 +117,10 @@ TIME_ZONE = "UTC"
 USE_TZ = True
 # endregion
 
+# region 3rd party
+GRAPPELLI_INDEX_DASHBOARD = "{{cookiecutter.project_name}}.home.dashboard.AdminDashboard"
+GRAPPELLI_ADMIN_TITLE = "{{cookiecutter.project_name}}"
+# endregion
+
 with contextlib.suppress(ImportError):
     from {{cookiecutter.project_name}}.local.settings import *  # noqa: F401, F403
