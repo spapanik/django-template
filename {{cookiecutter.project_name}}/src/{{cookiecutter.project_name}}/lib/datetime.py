@@ -1,5 +1,5 @@
-import typing as tp
 from datetime import datetime
+from typing import Set
 from zoneinfo import ZoneInfo, available_timezones
 
 from {{cookiecutter.project_name}}.lib.data.timezones import (
@@ -11,7 +11,7 @@ from {{cookiecutter.project_name}}.lib.data.timezones import (
 UTC = ZoneInfo("UTC")
 
 
-def get_timezones() -> tp.Set[str]:
+def get_timezones() -> Set[str]:
     unavailable_timezones = set.union(
         DEPRECATED_TIMEZONES, NON_IANA_TIMEZONES, PROPOSED_TIMEZONES
     )
