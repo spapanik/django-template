@@ -37,7 +37,13 @@ To install the project you need to create and activate a virtual environment, wh
 Create the certificate
 ^^^^^^^^^^^^^^^^^^^^^^
 
-As the site is HTTPS-only, there must be a certificate for it. You may use `easyCA`_ to create it.
+As the site is HTTPS-only, there must be a certificate for it. There are two good ways to do it:
+
+* Use `ngrok`_
+* Use `easyCA`_
+
+Ngrok will use ngrok's certificate, and easyCA will create a root certificate that you'll need to install,
+and then change your ``nginx`` and ``/etc/hosts`` to use it. Both projects have good documentation that you can follow.
 
 Creating the virtualenv
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -132,3 +138,4 @@ Updating the project can be done by yam:
 .. _`pyenv`: https://github.com/pyenv/pyenv#installation
 .. _`poetry`: https://python-poetry.org/docs/
 .. _`easyCA`: https://github.com/onepesu/easyCA
+.. _`ngrok`: https://ngrok.com/
