@@ -8,18 +8,25 @@ target-version = ["py310"]
 [tool.isort]
 line_length = 88
 multi_line_output = 3
+py_version = 310
 include_trailing_comma = true
 known_tests = "tests"
 known_django = "django"
 sections = ["FUTURE", "STDLIB", "THIRDPARTY", "DJANGO", "FIRSTPARTY", "TESTS"]
 
 [tool.mypy]
+exclude = "/migrations/"
+check_untyped_defs = true
+disallow_any_generics = true
 ignore_missing_imports = true
+no_implicit_reexport = true
+show_error_codes = true
 strict_optional = false
 warn_return_any = true
 warn_redundant_casts = true
 warn_unused_ignores = true
 warn_unreachable = true
+warn_unused_configs = true
 
 [tool.pytest.ini_options]
 addopts = "-vv --reuse-db"
@@ -33,17 +40,6 @@ license = "Proprietary"
 authors = [
     "{{cookiecutter.author_name}} <{{cookiecutter.author_email}}>",
 ]
-
-packages = [
-    {include = "home", from = "src"},
-    {include = "lib", from = "src"},
-    {include = "registration", from = "src"},
-    {include = "settings", from = "src"},
-    {include = "asgi.py", from = "src"},
-    {include = "urls.py", from = "src"},
-    {include = "wsgi.py", from = "src"},
-]
-
 
 [tool.poetry.dependencies]
 # python version
