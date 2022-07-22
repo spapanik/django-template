@@ -91,7 +91,7 @@ vars = [
 ]
 keep_ts = true
 exists_only = true
-existence_command = "[ $(psql -d ${db_base} -tAXc \"${db_exists}\") = \"t\" ]"
+existence_command = """[ $(psql -d ${db_base} -tAXc "${db_exists}") = "t" ]"""
 commands = [
     "createdb ${PGDATABASE}",
 ]
@@ -143,15 +143,17 @@ commands = [
 
 [staticfiles]
 phony = true
+keep_ts = true
 requires = [
     "install_py",
 ]
 commands = [
-  "${admin} collectstatic ${input} -v ${static_verbosity} -i \"*.scss\" ${static_extra}"
+    """${admin} collectstatic ${input} -v ${static_verbosity} -i "*.scss" ${static_extra}"""
 ]
 
 [static]
 phony = true
+keep_ts = true
 requires = [
     "install_js",
     "css",
