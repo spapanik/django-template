@@ -5,7 +5,7 @@ from django.core.management import CommandError
 from django.core.management.commands.makemigrations import Command as MakeMigrations
 from django.db.migrations.writer import MigrationWriter
 
-from lib.utils import hash_migrations
+from {{cookiecutter.project_name}}.lib.utils import hash_migrations
 
 
 class Command(MakeMigrations):

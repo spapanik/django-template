@@ -2,7 +2,7 @@ import typing as tp
 from datetime import datetime
 from zoneinfo import ZoneInfo, available_timezones
 
-from lib.data.timezones import (
+from {{cookiecutter.project_name}}.lib.data.timezones import (
     DEPRECATED_TIMEZONES,
     NON_IANA_TIMEZONES,
     PROPOSED_TIMEZONES,

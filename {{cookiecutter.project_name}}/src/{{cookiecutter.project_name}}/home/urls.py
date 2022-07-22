@@ -1,6 +1,6 @@
 from django.urls import path
 
-from home import views
+from {{cookiecutter.project_name}}.home import views
 
 app_name = "home"
 urlpatterns = [
