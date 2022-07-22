@@ -5,5 +5,5 @@ urlpatterns = [
     path("grappelli/", include("grappelli.urls")),
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
-    path("", include("home.urls", namespace="home")),
+    path("", include("{{cookiecutter.project_name}}.home.urls", namespace="home")),
 ]
