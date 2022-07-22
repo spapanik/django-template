@@ -6,7 +6,7 @@ from dj_settings.utils import setting
 from pathurl import URL
 
 BASE_DIR = pathlib.Path(__file__).parents[2]
-bmk_setting = partial(setting, base_dir=BASE_DIR, filename="bmk.yml")
+project_setting = partial(setting, base_dir=BASE_DIR, filename="{{cookiecutter.project_name}}.yml")
 
 # region Security
 validation = "django.contrib.auth.password_validation"
@@ -18,9 +18,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": f"{validation}.NumericPasswordValidator"},
 ]
 
-SECRET_KEY = bmk_setting(
+SECRET_KEY = project_setting(
     "SECRET_KEY",
-    sections=["bmk", "security"],
+    sections=["project", "security"],
     default="Insecure:fXP7kny5q3oKDV6_yBjs-keX6oZfRqC9pz--LDJ42r8",
 )
 
@@ -35,14 +35,14 @@ SECURE_HSTS_PRELOAD = True
 # endregion
 
 # region Application definition
-DEBUG = bmk_setting("DEBUG", sections=["bmk", "app"], rtype=bool, default=True)
-BASE_DOMAIN = bmk_setting("BASE_DOMAIN", sections=["bmk", "servers"])
+DEBUG = project_setting("DEBUG", sections=["project", "app"], rtype=bool, default=True)
+BASE_DOMAIN = project_setting("BASE_DOMAIN", sections=["project", "servers"])
 ALLOWED_HOSTS = [BASE_DOMAIN]
 BASE_URL = URL(f"{BASE_SCHEME}://{BASE_DOMAIN}")
 
 AUTH_USER_MODEL = "registration.User"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-ROOT_URLCONF = "bmk.urls"
+ROOT_URLCONF = "{{cookiecutter.project_name}}.urls"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -118,4 +118,4 @@ USE_TZ = True
 # endregion
 
 with contextlib.suppress(ImportError):
-    from bmk.local.settings import *  # noqa: F401, F403
+    from {{cookiecutter.project_name}}.local.settings import *  # noqa: F401, F403
