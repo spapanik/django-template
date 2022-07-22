@@ -65,12 +65,20 @@ class BaseQuerySet(models.QuerySet):
     def random(self):
         return self.order_by("?").first()
 
+    def update(self, **kwargs):
+        kwargs.setdefault("updated_at", now())
+        super().update(**kwargs)
+
 
 class BaseModel(models.Model):
     created_at: datetime = models.DateTimeField(default=now, editable=False)
     updated_at: datetime = models.DateTimeField(default=now, editable=False)
 
     objects: BaseManager = queryset_as_manager(BaseQuerySet)
+
+    def save(self, *args, **kwargs) -> None:
+        self.updated_at = now()
+        super().save(*args, **kwargs)
 
     class Meta:
         abstract = True
