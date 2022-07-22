@@ -100,7 +100,7 @@ LOGOUT_REDIRECT_URL = "/"
 
 # region Databases
 DATABASES = {
-    "default": {"ENGINE": "django.db.backends.postgresql", "NAME": "{{cookiecutter.project_name}}"}
+    "default": {"ENGINE": "django.db.backends.postgresql", "NAME": "{{cookiecutter.project_name}}"},
 }
 # endregion
 
