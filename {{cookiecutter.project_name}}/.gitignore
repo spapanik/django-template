@@ -4,10 +4,10 @@ __pycache__/
 .pytest_cache/
 
 # installation specific files
-env.toml
-local.*
+local*.*
 .yamk/
-make.toml.d/
+/cookbook.toml.d/
+/{{cookiecutter.project_name}}.yml
 
 # static
 /.static/
