@@ -54,7 +54,9 @@ def hash_file(path: Path | str, buffer_size=2**16) -> str:
 def hash_migrations() -> List[str]:
     loader = MigrationLoader(None, ignore_no_migrations=True)
     hashes = []
+    source = settings.BASE_DIR.joinpath("src").as_posix()
     for (app, migration_name), migration in loader.graph.nodes.items():
         path = MigrationWriter(migration).path
-        hashes.append(f"{app}::{migration_name}::{hash_file(path)}")
+        if path.startswith(source):
+            hashes.append(f"{app}::{migration_name}::{hash_file(path)}")
     return sorted(hashes)
