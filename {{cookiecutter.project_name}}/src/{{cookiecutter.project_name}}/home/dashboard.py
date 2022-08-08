@@ -15,7 +15,7 @@ class AdminDashboard(Dashboard):
                         models=["django.contrib.auth.models.Group"],
                     ),
                     modules.ModelList(
-                        "Users", column=1, models=["{{cookiecutter.project_name}}.registration.models.User"]
+                        "Users", column=1, models=["{{cookiecutter.project_name}}.authentication.models.User"]
                     ),
                 ],
             )

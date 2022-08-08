@@ -40,7 +40,7 @@ BASE_DOMAIN = project_setting("BASE_DOMAIN", sections=["project", "servers"])
 ALLOWED_HOSTS = [BASE_DOMAIN]
 BASE_URL = URL(f"{BASE_SCHEME}://{BASE_DOMAIN}")
 
-AUTH_USER_MODEL = "registration.User"
+AUTH_USER_MODEL = "authentication.User"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 ROOT_URLCONF = "{{cookiecutter.project_name}}.urls"
 
@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "{{cookiecutter.project_name}}.lib",
-    "{{cookiecutter.project_name}}.registration",
+    "{{cookiecutter.project_name}}.authentication",
     "{{cookiecutter.project_name}}.home",
 ]
 
