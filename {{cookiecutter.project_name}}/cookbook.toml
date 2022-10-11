@@ -1,20 +1,22 @@
 ["$globals"]
 shell = "bash"
-vars = [
-    { settings = "{{cookiecutter.project_name}}.settings" },
-    { env_vars = "DJANGO_SETTINGS_MODULE=${settings}" },
-    { admin = "${env_vars} django-admin" },
-    { "[weak]PGDATABASE" = "{{cookiecutter.project_name}}" },
-    { static_verbosity = "0" },
-    { input = "--no-input" },
-    { css_style = "expanded" },
-    { css_map = "--no-source-map" },
-    { interactive = "--non-interactive" },
-    { scss_files = "$((glob **/static/*/css/*.scss))" },
-    { css_files = "$((change_suffix ${scss_files} .css))" },
-    { po_files = "$((glob locale/*/LC_MESSAGES/django.po))" },
-    { mo_files = "$((sub .po .mo ${po_files}))" },
-]
+version = "4"
+
+["$globals".vars]
+settings = "{{cookiecutter.project_name}}.settings"
+env_vars = "DJANGO_SETTINGS_MODULE=${settings}"
+admin = "${env_vars} django-admin"
+"[weak]PGDATABASE" = "{{cookiecutter.project_name}}"
+static_verbosity = "0"
+poetry_sync = "--sync"
+input = "--no-input"
+css_style = "expanded"
+css_map = "--no-source-map"
+js_files = "$((glob **/static/*/js/*.js))"
+scss_files = "$((glob **/static/*/css/*.scss))"
+css_files = "$((change_suffix ${scss_files} .css))"
+po_files = "$((glob locale/*/LC_MESSAGES/django.po))"
+mo_files = "$((sub .po .mo ${po_files}))"
 
 [all]
 alias = "install"
@@ -29,6 +31,7 @@ requires = [
     "install_py",
     "db",
     "migrations",
+    "translations",
     "static",
 ]
 
@@ -39,7 +42,7 @@ requires = [
     "poetry.lock",
 ]
 commands = [
-    "poetry install --remove-untracked ${poetry_extra}",
+    "poetry install ${poetry_sync} ${poetry_extra}",
 ]
 
 [format]
@@ -52,12 +55,13 @@ commands = [
     "black .",
 ]
 
-[lint]
+[lint_py]
 phony = true
 requires = [
     "install_py",
 ]
 commands = [
+    "poetry lock --check",
     "isort --check .",
     "black --check .",
     "flake8 .",
@@ -85,16 +89,16 @@ commands = [
 
 [db]
 phony = true
-vars = [
-    { db_exists = "SELECT EXISTS (SELECT 1 FROM pg_database WHERE datname = '${PGDATABASE}')" },
-    { db_base = "template1" },
-]
 keep_ts = true
 exists_only = true
 existence_command = """[ $(psql -d ${db_base} -tAXc "${db_exists}") = "t" ]"""
 commands = [
     "createdb ${PGDATABASE}",
 ]
+
+[db.vars]
+db_exists = "SELECT EXISTS (SELECT 1 FROM pg_database WHERE datname = '${PGDATABASE}')"
+db_base = "template1"
 
 [migrations]
 phony = true
@@ -128,6 +132,7 @@ commands = [
 
 [css]
 phony = true
+keep_ts = true
 requires = [
     "${css_files}",
 ]
@@ -138,7 +143,7 @@ requires = [
     "${basename}.scss",
 ]
 commands = [
-  "sass -s ${css_style} ${css_map} ${.requirements:0} ${.target}"
+    "sass -s ${css_style} ${css_map} ${.requirements:0} ${.target}"
 ]
 
 [staticfiles]
@@ -159,7 +164,6 @@ requires = [
     "css",
     "staticfiles",
 ]
-
 
 ["locale/(?P<language>.+)/LC_MESSAGES/django\\.mo"]
 regex = true
