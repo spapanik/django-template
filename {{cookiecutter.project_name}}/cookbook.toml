@@ -45,7 +45,7 @@ commands = [
     "poetry install ${poetry_sync} ${poetry_extra}",
 ]
 
-[format]
+[format_py]
 phony = true
 requires = [
     "install_py",
@@ -68,6 +68,38 @@ commands = [
     "mypy .",
     "${admin} checkmigrations",
     "${admin} check",
+]
+
+[format_js]
+phony = true
+requires = [
+    "install_js",
+]
+commands = [
+    "npm run format",
+]
+
+[lint_js]
+phony = true
+requires = [
+    "install_js",
+]
+commands = [
+    "npm run lint",
+]
+
+[format]
+phony = true
+requires = [
+    "format_py",
+    "format_js",
+]
+
+[lint]
+phony = true
+requires = [
+    "lint_py",
+    "lint_js",
 ]
 
 [tests]
@@ -116,18 +148,18 @@ commands = [
 phony = true
 keep_ts = true
 requires = [
-    "yarn.lock",
+    "package-lock.json",
 ]
 commands = [
-    "yarn install ${interactive} ${yarn_extra}",
+    "npm install ${npm_extra}",
 ]
 
-["yarn.lock"]
+["package-lock.json"]
 requires = [
     "package.json",
 ]
 commands = [
-    "yarn generate-lock-entry > ${.target}",
+    "npm install --package-lock-only",
 ]
 
 [css]
@@ -151,6 +183,8 @@ phony = true
 keep_ts = true
 requires = [
     "install_py",
+    "css",
+    "${js_files}",
 ]
 commands = [
     """${admin} collectstatic ${input} -v ${static_verbosity} -i "*.scss" ${static_extra}"""

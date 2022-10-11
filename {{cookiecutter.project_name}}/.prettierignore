@@ -1,0 +1,15 @@
+# cache
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+
+# installation specific files
+local*.*
+.yamk/
+/cookbook.toml.d/
+/nautilus.yml
+
+# static
+/.static/
+/node_modules/
+package-lock.json
