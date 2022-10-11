@@ -10,6 +10,7 @@ local*.*
 /{{cookiecutter.project_name}}.yml
 
 # static
+*.css
 /.static/
 /node_modules/
 
