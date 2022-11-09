@@ -3,9 +3,10 @@ shell = "bash"
 version = "4"
 
 ["$globals".vars]
-settings = "{{cookiecutter.project_name}}.settings"
-env_vars = "DJANGO_SETTINGS_MODULE=${settings}"
-admin = "${env_vars} django-admin"
+"[weak]DJANGO_SETTINGS_MODULE" = "{{cookiecutter.project_name}}.settings"
+runner = "poetry run"
+env_vars = "DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}"
+admin = "${env_vars} ${runner} django-admin"
 "[weak]PGDATABASE" = "{{cookiecutter.project_name}}"
 static_verbosity = "0"
 poetry_sync = "--sync"
@@ -51,8 +52,8 @@ requires = [
     "install_py",
 ]
 commands = [
-    "isort .",
-    "black .",
+    "${runner} isort .",
+    "${runner} black .",
 ]
 
 [lint_py]
@@ -61,11 +62,11 @@ requires = [
     "install_py",
 ]
 commands = [
-    "poetry lock --check",
-    "isort --check .",
-    "black --check .",
-    "flake8 .",
-    "mypy .",
+    "${runner} poetry lock --check",
+    "${runner} isort --check .",
+    "${runner} black --check .",
+    "${runner} flake8 .",
+    "${runner} mypy .",
     "${admin} checkmigrations",
     "${admin} check",
 ]
@@ -108,7 +109,7 @@ requires = [
     "install",
 ]
 commands = [
-    "${env_vars} pytest ${pytest_args} ${pytest_path}",
+    "${env_vars} ${runner} pytest ${pytest_args} ${pytest_path}",
 ]
 
 ["poetry.lock"]
