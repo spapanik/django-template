@@ -52,8 +52,8 @@ Although poetry does create a virtual env, all the commands assume the existence
 
 .. code-block:: console
 
-    $ pyenv install 3.10.0
-    $ pyenv shell 3.10.0
+    $ pyenv install 3.11
+    $ pyenv shell 3.11
     $ python -m venv ~/.local/share/venv/{{cookiecutter.project_name}}
     $ . ~/.local/share/venv/{{cookiecutter.project_name}}
 

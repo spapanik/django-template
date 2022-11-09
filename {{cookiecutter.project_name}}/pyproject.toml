@@ -63,16 +63,16 @@ authors = [
 
 [tool.poetry.dependencies]
 # python version
-python = "^3.10.0"
+python = "^3.11.0"
 
 # dependencies
-dj-settings = "~4.0.0"
+dj-settings = "~4.1.0"
 Django = "~4.1.0"
 django-grappelli = "~3.0.0"
 gunicorn = "~20.1.0"
 pathurl = "~0.5.0"
 psycopg2 = "~2.9.0"
-uvicorn = "~0.18.0"
+uvicorn = "~0.19.0"
 
 [tool.poetry.group.dev.dependencies]
 django-extensions = "~3.2.0"
@@ -82,10 +82,10 @@ ptpython = "~3.0.0"
 Werkzeug = "~2.2.0"
 
 [tool.poetry.group.lint.dependencies]
-black = "~22.8.0"
+black = "~22.10.0"
 flake8 = "~5.0.0"
-flake8-bugbear = "~22.9.0"
-flake8-builtins = "~1.5.0"
+flake8-bugbear = "~22.10.0"
+flake8-builtins = "~2.0.0"
 flake8-comprehensions = "~3.10.0"
 flake8-eradicate = "~1.4.0"
 flake8-executable = "~2.1.0"
@@ -93,9 +93,9 @@ flake8-mutable = "~1.2.0"
 Flake8-pyproject = "~1.1.0"
 flake8-tidy-imports = "~4.8.0"
 isort = "~5.10.0"
-mypy = "~0.981"
+mypy = "~0.990"
 
 [tool.poetry.group.test.dependencies]
 factory-boy = "~3.2.0"
-pytest = "~7.1.0"
+pytest = "~7.2.0"
 pytest-django = "~4.5.0"
