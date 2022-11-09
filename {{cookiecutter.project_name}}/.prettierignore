@@ -7,7 +7,7 @@ __pycache__/
 local*.*
 .yamk/
 /cookbook.toml.d/
-/nautilus.yml
+/{{cookiecutter.project_name}}.yml
 
 # static
 /.static/
