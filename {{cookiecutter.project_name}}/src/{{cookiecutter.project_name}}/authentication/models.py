@@ -6,7 +6,7 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from {{cookiecutter.project_name}}.lib.models import BaseManager, BaseModel, BaseQuerySet, ForeignKey
+from {{cookiecutter.project_name}}.lib.models import BaseManager, BaseModel, BaseQuerySet
 
 
 class UserManager(BaseUserManager, BaseManager.from_queryset(BaseQuerySet)):  # type: ignore[misc]

@@ -4,6 +4,7 @@ from functools import wraps
 from pathlib import Path
 from typing import Any, Callable, List, Tuple, Type
 
+from django.conf import settings
 from django.db.migrations.loader import MigrationLoader
 from django.db.migrations.writer import MigrationWriter
 
