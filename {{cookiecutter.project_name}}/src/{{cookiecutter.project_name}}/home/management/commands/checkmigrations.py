@@ -48,6 +48,7 @@ class Command(MakeMigrations):
         options["interactive"] = False
         options["merge"] = False
         options["empty"] = False
+        options["scriptable"] = False
         options["name"] = ""
         options["include_header"] = False
         super().handle(*args, **options)
