@@ -43,10 +43,7 @@ def hash_file(path: Path | str, buffer_size=2**16) -> str:
     sha256 = hashlib.sha256()
 
     with open(path, "rb") as f:
-        while True:
-            data = f.read(buffer_size)
-            if not data:
-                break
+        while data := f.read(buffer_size):
             sha256.update(data)
 
     return sha256.hexdigest()
