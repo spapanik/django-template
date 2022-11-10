@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, cast
+from typing import List, Optional, cast
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
@@ -12,7 +12,7 @@ from {{cookiecutter.project_name}}.lib.models import BaseManager, BaseModel, Bas
 class UserManager(BaseUserManager, BaseManager.from_queryset(BaseQuerySet)):  # type: ignore[misc]
     use_in_migrations = True
 
-    def _create_user(self, email: str, password: str, **extra_fields) -> User:
+    def _create_user(self, email: str, password: Optional[str], **extra_fields) -> User:
         if not email:
             raise ValueError("An email must be set")
 
@@ -22,13 +22,15 @@ class UserManager(BaseUserManager, BaseManager.from_queryset(BaseQuerySet)):  # 
         user.save(using=self._db)
         return cast(User, user)
 
-    def create_user(self, email: str, password: str = None, **extra_fields) -> User:
+    def create_user(
+        self, email: str, password: Optional[str] = None, **extra_fields
+    ) -> User:
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(
-        self, email: str, password: str = None, **extra_fields
+        self, email: str, password: Optional[str] = None, **extra_fields
     ) -> User:
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
