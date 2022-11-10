@@ -2,9 +2,12 @@ from datetime import datetime
 from typing import Set
 from zoneinfo import ZoneInfo, available_timezones
 
+from django.conf import settings
+
 from {{cookiecutter.project_name}}.lib.data.timezones import UNAVAILABLE_TIMEZONES
 
-UTC = ZoneInfo("UTC")
+def now(local_timezone: ZoneInfo = settings.TZ_INFO) -> datetime:
+    return datetime.now(ZoneInfo("UTC")).astimezone(local_timezone)
 
 
 def get_timezones() -> Set[str]:
@@ -17,11 +20,49 @@ def get_timezones() -> Set[str]:
     return available_timezones() - UNAVAILABLE_TIMEZONES
 
 
-def now(tz_info: ZoneInfo = UTC) -> datetime:
-    return datetime.now(UTC).astimezone(tz_info)
+def from_iso(date_string: str, local_timezone: ZoneInfo = settings.TZ_INFO) -> datetime:
+    """
+    Get datetime from an iso string
+
+    This to allow the Zulu timezone, which is a valid ISO timezone.
+    """
+    date_string = date_string.replace("Z", "+00:00")
+    dt = datetime.fromisoformat(date_string)
+    try:
+        return add_timezone(dt, local_timezone)
+    except ValueError:
+        return convert_timezone(dt, local_timezone)
 
 
-def as_timezone(dt: datetime, tz_info: ZoneInfo = UTC) -> datetime:
+def from_timestamp(
+    timestamp: float, local_timezone: ZoneInfo = settings.TZ_INFO
+) -> datetime:
+    """
+    Get a datetime tz-aware time object from a timestamp
+    """
+    utc_dt = add_timezone(datetime.fromtimestamp(timestamp))
+    return convert_timezone(utc_dt, local_timezone)
+
+
+def add_timezone(dt: datetime, local_timezone: ZoneInfo = settings.TZ_INFO) -> datetime:
+    """
+    Add a timezone to a naive datetime
+
+    Raise an error in case of a tz-aware datetime
+    """
+    if dt.tzinfo is not None:
+        raise ValueError(f"{dt} is already tz-aware")
+    return dt.replace(tzinfo=local_timezone)
+
+
+def convert_timezone(
+    dt: datetime, local_timezone: ZoneInfo = settings.TZ_INFO
+) -> datetime:
+    """
+    Change the timezone of a tz-aware datetime
+
+    Raise an error in case of a naive datetime
+    """
     if dt.tzinfo is None:
-        return dt.replace(tzinfo=tz_info)
-    return dt.astimezone(tz_info)
+        raise ValueError(f"{dt} is a naive datetime")
+    return dt.astimezone(local_timezone)
