@@ -3,7 +3,7 @@ from typing import List
 
 from django.db import models
 
-from {{cookiecutter.project_name}}.lib.datetime import now
+from {{cookiecutter.project_name}}.lib.date_utils import now
 
 
 class BaseManager(models.Manager):
