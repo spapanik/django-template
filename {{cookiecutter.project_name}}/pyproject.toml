@@ -49,8 +49,16 @@ banned-modules = """
 ban-relative-imports = true
 
 [tool.pytest.ini_options]
-addopts = "-vv --reuse-db"
+addopts = "-vv --cov --cov-report=term-missing:skip-covered --reuse-db"
 testpaths = "tests"
+
+[tool.coverage.run]
+source = ["src/"]
+omit = [
+    "src/{{cookiecutter.project_name}}/asgi.py",
+    "src/{{cookiecutter.project_name}}/wsgi.py",
+    "src/{{cookiecutter.project_name}}/authentication/migrations/*",
+]
 
 [tool.poetry]
 name = "{{cookiecutter.project_name}}"
@@ -99,4 +107,5 @@ mypy = "~0.990"
 factory-boy = "~3.2.0"
 freezegun = "~1.2.0"
 pytest = "~7.2.0"
+pytest-cov = "~4.0.0"
 pytest-django = "~4.5.0"
