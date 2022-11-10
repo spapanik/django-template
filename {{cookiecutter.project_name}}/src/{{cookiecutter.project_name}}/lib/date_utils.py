@@ -2,20 +2,19 @@ from datetime import datetime
 from typing import Set
 from zoneinfo import ZoneInfo, available_timezones
 
-from {{cookiecutter.project_name}}.lib.data.timezones import (
-    DEPRECATED_TIMEZONES,
-    NON_IANA_TIMEZONES,
-    PROPOSED_TIMEZONES,
-)
+from {{cookiecutter.project_name}}.lib.data.timezones import UNAVAILABLE_TIMEZONES
 
 UTC = ZoneInfo("UTC")
 
 
 def get_timezones() -> Set[str]:
-    unavailable_timezones = set.union(
-        DEPRECATED_TIMEZONES, NON_IANA_TIMEZONES, PROPOSED_TIMEZONES
-    )
-    return available_timezones() - unavailable_timezones
+    """
+    Get all the available timezones
+
+    This takes into accounts timezones that might not be present in
+    all systems.
+    """
+    return available_timezones() - UNAVAILABLE_TIMEZONES
 
 
 def now(tz_info: ZoneInfo = UTC) -> datetime:
