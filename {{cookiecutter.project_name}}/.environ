@@ -1,1 +1,2 @@
 DJANGO_SETTINGS_MODULE={{cookiecutter.project_name}}.settings
+WERKZEUG_DEBUG_PIN=off
