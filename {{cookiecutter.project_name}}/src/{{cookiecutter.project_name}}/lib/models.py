@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List
 
 from django.db import models
 
@@ -14,7 +13,7 @@ class BaseManager(models.Manager):
             obj.created_at = dt
         return super().bulk_create(objs, *args, **kwargs)
 
-    def bulk_update(self, objs, fields: List[str], *args, **kwargs):
+    def bulk_update(self, objs, fields: list[str], *args, **kwargs):
         dt = now()
         for obj in objs:
             obj.updated_at = dt
@@ -67,7 +66,7 @@ class BaseQuerySet(models.QuerySet):
 
     def update(self, **kwargs):
         kwargs.setdefault("updated_at", now())
-        super().update(**kwargs)
+        return super().update(**kwargs)
 
 
 class BaseModel(models.Model):

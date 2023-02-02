@@ -6,11 +6,8 @@ build-backend = "poetry.core.masonry.api"
 target-version = ["py311"]
 
 [tool.isort]
-line_length = 88
-multi_line_output = 3
-py_version = 310
-combine_as_imports = true
-include_trailing_comma = true
+profile = "black"
+py_version = 311
 known_tests = "tests"
 known_django = "django"
 sections = ["FUTURE", "STDLIB", "THIRDPARTY", "DJANGO", "FIRSTPARTY", "TESTS"]
@@ -70,41 +67,41 @@ authors = [
 
 [tool.poetry.dependencies]
 # python version
-python = "^3.11.0"
+python = "^3.11"
 
 # dependencies
-dj-settings = "~4.1.0"
-Django = "~4.1.0"
-django-grappelli = "~3.0.0"
-gunicorn = "~20.1.0"
-pathurl = "~0.5.0"
-psycopg2 = "~2.9.0"
-uvicorn = "~0.19.0"
+dj-settings = "~4.2"
+Django = "~4.1"
+django-grappelli = "~3.0"
+gunicorn = "~20.1"
+pathurl = "~0.5"
+psycopg2 = "~2.9"
+uvicorn = "~0.20"
 
 [tool.poetry.group.dev.dependencies]
-django-extensions = "~3.2.0"
-pdbpp = "~0.10.0"
-pipdeptree = "~2.3.0"
-ptpython = "~3.0.0"
-Werkzeug = "~2.2.0"
+django-extensions = "~3.2"
+ipdb = "~0.13"
+ipython = "~8.9"
+pipdeptree = "~2.3"
+Werkzeug = "~2.2"
 
 [tool.poetry.group.lint.dependencies]
-black = "~22.10.0"
-flake8 = "~5.0.0"
-flake8-bugbear = "~22.10.0"
-flake8-builtins = "~2.0.0"
-flake8-comprehensions = "~3.10.0"
-flake8-eradicate = "~1.4.0"
-flake8-executable = "~2.1.0"
-flake8-mutable = "~1.2.0"
-Flake8-pyproject = "~1.1.0"
-flake8-tidy-imports = "~4.8.0"
-isort = "~5.10.0"
-mypy = "~0.990"
+black = "~23.1"
+flake8 = "~5.0"
+flake8-bugbear = "~23.1"
+flake8-builtins = "~2.1"
+flake8-comprehensions = "~3.10"
+flake8-eradicate = "~1.4"
+flake8-executable = "~2.1"
+flake8-mutable = "~1.2"
+Flake8-pyproject = "~1.2"
+flake8-tidy-imports = "~4.8"
+isort = "~5.12"
+mypy = "~0.991"
 
 [tool.poetry.group.test.dependencies]
-factory-boy = "~3.2.0"
-freezegun = "~1.2.0"
-pytest = "~7.2.0"
-pytest-cov = "~4.0.0"
-pytest-django = "~4.5.0"
+factory-boy = "~3.2"
+freezegun = "~1.2"
+pytest = "~7.2"
+pytest-cov = "~4.0"
+pytest-django = "~4.5"

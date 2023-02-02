@@ -1,8 +1,9 @@
 import hashlib
 import logging
+from collections.abc import Callable
 from functools import wraps
 from pathlib import Path
-from typing import Any, Callable, List, Tuple, Type
+from typing import Any
 
 from django.conf import settings
 from django.db.migrations.loader import MigrationLoader
@@ -14,7 +15,7 @@ INGEST_ERROR = "Function `%s` threw `%s` when called with args=%s and kwargs=%s"
 
 def handle_exceptions(
     *,
-    exceptions: Tuple[Type[Exception], ...] = (Exception,),
+    exceptions: tuple[type[Exception], ...] = (Exception,),
     default: Any = None,
     log_level: str = "info",
 ) -> Any:
@@ -49,7 +50,7 @@ def hash_file(path: Path | str, buffer_size=2**16) -> str:
     return sha256.hexdigest()
 
 
-def hash_migrations() -> List[str]:
+def hash_migrations() -> list[str]:
     loader = MigrationLoader(None, ignore_no_migrations=True)
     hashes = []
     source = settings.BASE_DIR.joinpath("src").as_posix()

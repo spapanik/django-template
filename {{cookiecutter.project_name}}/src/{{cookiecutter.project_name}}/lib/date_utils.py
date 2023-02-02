@@ -1,16 +1,17 @@
 from datetime import datetime
-from typing import Set
 from zoneinfo import ZoneInfo, available_timezones
 
 from django.conf import settings
 
 from {{cookiecutter.project_name}}.lib.data.timezones import UNAVAILABLE_TIMEZONES
 
+UTC = ZoneInfo("UTC")
+
+
 def now(local_timezone: ZoneInfo = settings.TZ_INFO) -> datetime:
     return datetime.now(ZoneInfo("UTC")).astimezone(local_timezone)
 
-
-def get_timezones() -> Set[str]:
+def get_timezones() -> set[str]:
     """
     Get all the available timezones
 

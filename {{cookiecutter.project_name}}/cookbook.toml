@@ -36,6 +36,15 @@ requires = [
     "static",
 ]
 
+[runserver]
+phony = true
+requires = [
+    "install",
+]
+commands = [
+    "${admin} runserver_plus ${webserver_netloc}"
+]
+
 [install_py]
 phony = true
 keep_ts = true
@@ -113,11 +122,12 @@ commands = [
 ]
 
 ["poetry.lock"]
+update = true
 requires = [
     "pyproject.toml",
 ]
 commands = [
-    "poetry lock && touch ${.target}",
+    "poetry lock",
 ]
 
 [db]
@@ -156,6 +166,7 @@ commands = [
 ]
 
 ["package-lock.json"]
+update = true
 requires = [
     "package.json",
 ]

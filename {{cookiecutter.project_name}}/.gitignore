@@ -14,5 +14,8 @@ local*.*
 /.static/
 /node_modules/
 
+# testing
+.coverage
+
 # translations
 *.mo
