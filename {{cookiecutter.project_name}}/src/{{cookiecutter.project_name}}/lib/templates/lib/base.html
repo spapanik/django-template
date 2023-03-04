@@ -5,12 +5,14 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{% block title %}{% endblock title %}</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{% block description %}{% endblock description %}">
     <meta name="author" content="{% block author %}{% endblock author %}">
 
-    <link rel="icon" href="{% static 'lib/images/favicon.ico' %}">
+    <title>{% block title %}{% endblock title %}</title>
+
+    {% include "branding/favicons.html" %}
 
     {% block css %}
         {% block css_extra %}{% endblock %}

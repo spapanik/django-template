@@ -3,7 +3,7 @@ import pytest
 from {{cookiecutter.project_name}}.lib import utils
 
 
-def test_handle_exceptions_expected_exception():
+def test_handle_exceptions_handled_exception():
     @utils.handle_exceptions(exceptions=(ZeroDivisionError,), default="BOOM!")
     def invert(n):
         return 1 / n
@@ -12,7 +12,7 @@ def test_handle_exceptions_expected_exception():
     assert invert(0) == "BOOM!"
 
 
-def test_handle_exceptions_unexpected_exception():
+def test_handle_exceptions_unhandled_exception():
     @utils.handle_exceptions(exceptions=(TypeError,), default="BOOM!")
     def invert(n):
         return 1 / n
