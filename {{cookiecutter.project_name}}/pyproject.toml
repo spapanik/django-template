@@ -5,13 +5,6 @@ build-backend = "poetry.core.masonry.api"
 [tool.black]
 target-version = ["py311"]
 
-[tool.isort]
-profile = "black"
-py_version = 311
-known_tests = "tests"
-known_django = "django"
-sections = ["FUTURE", "STDLIB", "THIRDPARTY", "DJANGO", "FIRSTPARTY", "TESTS"]
-
 [tool.mypy]
 exclude = "/migrations/"
 check_untyped_defs = true
@@ -25,24 +18,38 @@ warn_unused_ignores = true
 warn_unreachable = true
 warn_unused_configs = true
 
-[tool.flake8]
-exclude = [
-    ".git",
-    "__pycache__",
-    ".venv",
-    ".cache",
+[tool.ruff]
+select = [
+    "A",
+    "B",
+    "C4",
+    "E",
+    "ERA",
+    "EXE",
+    "F",
+    "G",
+    "I",
+    "N",
+    "PTH",
+    "T10",
+    "TID",
+    "UP",
 ]
-max-line-length = 88
-ignore = [
-    "E203",
-    "E501",
-    "W503",
-]
-banned-modules = """
-    mock = use unittest.mock
-    pytz = use zoneinfo
-"""
-ban-relative-imports = true
+ignore = ["E501"]
+src = ["src"]
+target-version = "py311"
+
+[tool.ruff.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.flake8-tidy-imports.banned-api]
+"mock".msg = "Use unittest.mock"
+"pytz".msg = "Use zoneinfo"
+
+[tool.ruff.isort]
+combine-as-imports = true
+forced-separate = ["tests"]
+split-on-trailing-comma = false
 
 [tool.pytest.ini_options]
 addopts = "-vv --cov --cov-report=term-missing:skip-covered --reuse-db"
@@ -50,6 +57,7 @@ testpaths = "tests"
 
 [tool.coverage.run]
 source = ["src/"]
+data_file = ".coverage_cache/coverage.dat"
 omit = [
     "src/{{cookiecutter.project_name}}/asgi.py",
     "src/{{cookiecutter.project_name}}/wsgi.py",
@@ -81,23 +89,14 @@ uvicorn = "~0.20"
 [tool.poetry.group.dev.dependencies]
 django-extensions = "~3.2"
 ipdb = "~0.13"
-ipython = "~8.9"
-pipdeptree = "~2.3"
+ipython = "~8.11"
+pipdeptree = "~2.5"
 Werkzeug = "~2.2"
 
 [tool.poetry.group.lint.dependencies]
 black = "~23.1"
-flake8 = "~5.0"
-flake8-bugbear = "~23.1"
-flake8-builtins = "~2.1"
-flake8-comprehensions = "~3.10"
-flake8-eradicate = "~1.4"
-flake8-executable = "~2.1"
-flake8-mutable = "~1.2"
-Flake8-pyproject = "~1.2"
-flake8-tidy-imports = "~4.8"
-isort = "~5.12"
-mypy = "~0.991"
+mypy = "~1.0"
+ruff = "~0.0"
 
 [tool.poetry.group.test.dependencies]
 factory-boy = "~3.2"

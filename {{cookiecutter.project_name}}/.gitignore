@@ -2,20 +2,21 @@
 __pycache__/
 .mypy_cache/
 .pytest_cache/
+.coverage_cache/
+.ruff_cache/
 
 # installation specific files
+local/
 local*.*
 .yamk/
 /cookbook.toml.d/
 /{{cookiecutter.project_name}}.yml
 
 # static
-*.css
+/src/**/*.js
+/src/**/*.css
 /.static/
 /node_modules/
-
-# testing
-.coverage
 
 # translations
 *.mo
