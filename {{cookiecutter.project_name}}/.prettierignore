@@ -2,14 +2,19 @@
 __pycache__/
 .mypy_cache/
 .pytest_cache/
+.ruff_cache/
+.cov_cache/
 
-# installation specific files
-local*.*
+# installation artifacts
 .yamk/
-/cookbook.toml.d/
-/{{cookiecutter.project_name}}.yml
+/node_modules/
 
 # static
 /.static/
-/node_modules/
 package-lock.json
+
+# local dev
+/cookbook.toml.d/
+/{{cookiecutter.project_name}}.yml
+local.*
+local/

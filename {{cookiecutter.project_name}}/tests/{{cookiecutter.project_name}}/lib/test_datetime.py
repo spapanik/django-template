@@ -4,7 +4,7 @@ from zoneinfo import ZoneInfo
 import pytest
 from freezegun import freeze_time
 
-from {{cookiecutter.project_name}}.lib import date_utils
+from {{cookiecutter.project_name}}.lib import datetime as date_utils
 
 TEST_TIMEZONES = [ZoneInfo("UTC"), ZoneInfo("Europe/London"), ZoneInfo("Asia/Tokyo")]
 
@@ -13,7 +13,7 @@ TEST_TIMEZONES = [ZoneInfo("UTC"), ZoneInfo("Europe/London"), ZoneInfo("Asia/Tok
 def test_now():
     now = date_utils.now()
     assert now.tzinfo == ZoneInfo("UTC")
-    assert now.timestamp() == datetime.utcnow().timestamp()
+    assert now.timestamp() == datetime.now(tz=ZoneInfo("UTC")).timestamp()
 
 
 def test_get_timezones():
@@ -44,24 +44,21 @@ def test_from_timestamp(tz_info):
 
 
 @pytest.mark.parametrize(
-    ["tz_info", "expected"],
+    ("tz_info", "expected"),
     [
-        [ZoneInfo("UTC"), datetime(2022, 1, 1, tzinfo=ZoneInfo("UTC"))],
-        [ZoneInfo("Europe/London"), datetime(2022, 1, 1, tzinfo=ZoneInfo("UTC"))],
-        [ZoneInfo("Asia/Tokyo"), datetime(2021, 12, 31, 15, tzinfo=ZoneInfo("UTC"))],
+        (ZoneInfo("UTC"), datetime(2022, 1, 1, tzinfo=ZoneInfo("UTC"))),
+        (ZoneInfo("Europe/London"), datetime(2022, 1, 1, tzinfo=ZoneInfo("UTC"))),
+        (ZoneInfo("Asia/Tokyo"), datetime(2021, 12, 31, 15, tzinfo=ZoneInfo("UTC"))),
     ],
 )
 def test_add_timezone_to_naive_datetime(tz_info, expected):
-    dt = datetime(2022, 1, 1)
+    dt = datetime(2022, 1, 1)  # noqa: DTZ001
     assert date_utils.add_timezone(dt, tz_info) == expected
 
 
 def test_add_timezone_to_tz_aware_datetime():
-    pytest.raises(
-        ValueError,
-        date_utils.add_timezone,
-        datetime(2022, 1, 1, tzinfo=ZoneInfo("UTC")),
-    )
+    with pytest.raises(ValueError):
+        date_utils.add_timezone(datetime(2022, 1, 1, tzinfo=ZoneInfo("UTC")))
 
 
 @pytest.mark.parametrize("tz_info", TEST_TIMEZONES)
@@ -71,8 +68,5 @@ def test_convert_does_not_change_timestamp(tz_info):
 
 
 def test_convert_timezone_to_naive_datetime():
-    pytest.raises(
-        ValueError,
-        date_utils.convert_timezone,
-        datetime(2022, 1, 1),
-    )
+    with pytest.raises(ValueError):
+        date_utils.convert_timezone(datetime(2022, 1, 1))  # noqa: DTZ001

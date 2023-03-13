@@ -1,5 +1,5 @@
-from django.views.generic import TemplateView
+from {{cookiecutter.project_name}}.lib.views import BaseView
 
 
-class HomeView(TemplateView):
+class HomeView(BaseView):
     template_name = "home/home.html"

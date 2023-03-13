@@ -13,11 +13,8 @@ poetry_sync = "--sync"
 input = "--no-input"
 css_style = "expanded"
 css_map = "--no-source-map"
-js_files = "$((glob **/static/*/js/*.js))"
-scss_files = "$((glob **/static/*/css/*.scss))"
-css_files = "$((change_suffix ${scss_files} .css))"
-po_files = "$((glob locale/*/LC_MESSAGES/django.po))"
-mo_files = "$((sub .po .mo ${po_files}))"
+css_dir = "src/{cookiecutter.project_name}}/lib/static/lib/css"
+js_dir = "src/{cookiecutter.project_name}}/lib/static/lib/js"
 
 [all]
 alias = "install"
@@ -61,7 +58,7 @@ requires = [
     "install_py",
 ]
 commands = [
-    "${runner} isort .",
+    "${runner} ruff --fix-only .",
     "${runner} black .",
 ]
 
@@ -72,9 +69,8 @@ requires = [
 ]
 commands = [
     "${runner} poetry lock --check",
-    "${runner} isort --check .",
+    "${runner} ruff .",
     "${runner} black --check .",
-    "${runner} flake8 .",
     "${runner} mypy .",
     "${admin} checkmigrations",
     "${admin} check",
@@ -110,6 +106,9 @@ phony = true
 requires = [
     "lint_py",
     "lint_js",
+]
+commands = [
+    "$(pwd)/enforce_eol.py",
 ]
 
 [tests]
@@ -162,7 +161,7 @@ requires = [
     "package-lock.json",
 ]
 commands = [
-    "npm install ${npm_extra}",
+    "npm ci ${npm_extra}",
 ]
 
 ["package-lock.json"]
@@ -174,41 +173,49 @@ commands = [
     "npm install --package-lock-only",
 ]
 
+["${js_dir}/base.js"]
+regex = true
+requires = [
+    "${js_dir}/base.ts",
+]
+commands = [
+    "npm run tsc",
+]
+
+[js]
+phony = true
+keep_ts = true
+requires = [
+    "${js_dir}/base.js",
+]
+
+["${css_dir}/base.css"]
+regex = true
+requires = [
+    "${css_dir}/base.scss",
+]
+commands = [
+    "npm run sass -- -s ${css_style} ${css_map} ${.requirements:0} ${.target}",
+]
+
 [css]
 phony = true
 keep_ts = true
 requires = [
-    "${css_files}",
-]
-
-["(?P<basename>.+)\\.css"]
-regex = true
-requires = [
-    "${basename}.scss",
-]
-commands = [
-    "sass -s ${css_style} ${css_map} ${.requirements:0} ${.target}"
-]
-
-[staticfiles]
-phony = true
-keep_ts = true
-requires = [
-    "install_py",
-    "css",
-    "${js_files}",
-]
-commands = [
-    """${admin} collectstatic ${input} -v ${static_verbosity} -i "*.scss" ${static_extra}"""
+    "${css_dir}/base.css",
 ]
 
 [static]
 phony = true
 keep_ts = true
 requires = [
+    "install_py",
     "install_js",
     "css",
-    "staticfiles",
+    "js",
+]
+commands = [
+    """${admin} collectstatic ${input} -v ${static_verbosity} -i "*.scss" -i "*.ts" ${static_extra}""",
 ]
 
 ["locale/(?P<language>.+)/LC_MESSAGES/django\\.mo"]

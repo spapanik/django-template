@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+from collections.abc import Iterator
 from itertools import chain
 from pathlib import Path
 from traceback import print_exc
@@ -14,13 +15,14 @@ def assert_eol_characters(filename):
     with filename.open("rb+") as file:
         file.seek(-2, 2)
         penultimate, last = file.read(2)
-    if last != 10:
+    newline = ord("\n")
+    if last != newline:
         raise ValueError(f"File {filename} doesn't end with a \\n character")
-    if penultimate == 10:
+    if penultimate == newline:
         raise ValueError(f"File {filename} ends with multiple \\n characters")
 
 
-def gather_files():
+def gather_files() -> Iterator[Path]:
     base_dir = Path(__file__).parent
     files = [
         base_dir.iterdir(),

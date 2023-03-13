@@ -20,31 +20,31 @@ class TestBaseModel:
         }
 
     @pytest.fixture(autouse=True)
-    def create_users(self):
+    def _create_users(self):
         users = [
             User(email=email, is_superuser=False, is_staff=False)
             for email in self.emails
         ]
         User.objects.bulk_create(users)
 
-    @pytest.mark.django_db
+    @pytest.mark.django_db()
     def test_bulk_create(self):
         assert User.objects.count() == 3
 
-    @pytest.mark.django_db
+    @pytest.mark.django_db()
     def test_random(self):
         assert User.objects.random().email in self.emails
 
-    @pytest.mark.django_db
+    @pytest.mark.django_db()
     def test_flat_values(self):
         assert set(User.objects.flat_values("email")) == self.emails
 
-    @pytest.mark.django_db
+    @pytest.mark.django_db()
     def test_update(self):
         User.objects.all().update(is_staff=True)
         assert User.objects.filter(is_staff=True).count() == 3
 
-    @pytest.mark.django_db
+    @pytest.mark.django_db()
     def test_bulk_update(self):
         users = []
         for user in User.objects.all():

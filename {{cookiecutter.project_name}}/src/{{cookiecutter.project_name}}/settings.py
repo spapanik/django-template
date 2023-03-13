@@ -23,15 +23,17 @@ SECRET_KEY = project_setting(
     sections=["project", "security"],
     default="Insecure:fXP7kny5q3oKDV6_yBjs-keX6oZfRqC9pz--LDJ42r8",
 )
-
-BASE_SCHEME = "https"
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", BASE_SCHEME)
-SECURE_SSL_REDIRECT = True
-SECURE_HSTS_SECONDS = 31536000
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+BASE_SCHEME = project_setting(
+    "BASE_SCHEME", sections=["project", "security"], default="https"
+)
+if BASE_SCHEME == "https":
+    SECURE_PROXY_SSL_HEADER = "HTTP_X_FORWARDED_PROTO", "https"
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
 # endregion
 
 # region Application definition
@@ -40,12 +42,13 @@ BASE_DOMAIN = project_setting("BASE_DOMAIN", sections=["project", "servers"])
 ALLOWED_HOSTS = [BASE_DOMAIN]
 BASE_URL = URL(f"{BASE_SCHEME}://{BASE_DOMAIN}")
 
-AUTH_USER_MODEL = "authentication.User"
+AUTH_USER_MODEL = "registration.User"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 ROOT_URLCONF = "{{cookiecutter.project_name}}.urls"
 
 INSTALLED_APPS = [
     "django.contrib.contenttypes",
+    "{{cookiecutter.project_name}}.branding",
     "grappelli.dashboard",
     "grappelli",
     "django.contrib.admin",
@@ -54,7 +57,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "{{cookiecutter.project_name}}.lib",
-    "{{cookiecutter.project_name}}.authentication",
+    "{{cookiecutter.project_name}}.registration",
     "{{cookiecutter.project_name}}.home",
 ]
 
@@ -106,6 +109,7 @@ DATABASES = {
 # endregion
 
 # region Static files
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR.joinpath(".static")
 # endregion
@@ -126,4 +130,4 @@ GRAPPELLI_ADMIN_TITLE = "{{cookiecutter.project_name}}"
 # endregion
 
 with contextlib.suppress(ImportError):
-    from {{cookiecutter.project_name}}.local.settings import *  # noqa: F401, F403
+    from kuma.local.settings import *  # noqa: F403

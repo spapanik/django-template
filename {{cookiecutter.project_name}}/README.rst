@@ -3,8 +3,14 @@
 =======
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-  :alt: Code style
+  :alt: code style: black
   :target: https://github.com/psf/black
+.. image:: https://img.shields.io/badge/build%20automation-yamk-success
+  :alt: build automation: yam
+  :target: https://github.com/spapanik/yamk
+.. image:: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v1.json
+  :alt: Lint: ruff
+  :target: https://github.com/charliermarsh/ruff
 
 Installation
 ------------
@@ -21,10 +27,9 @@ From python packages outside the virtualenv, the project also requires `poetry`_
 
 The external tools that are assumed to be installed are:
 
-* `dart-sass`_
 * `nginx`_
 * `postgres`_
-* `yarn`_
+* `npm`_
 * `yamk`_
 * `pyenv`_
 * `poetry`_
@@ -130,10 +135,9 @@ Updating the project can be done by yam:
     $ yam update
 
 
-.. _`dart-sass`: https://sass-lang.com/install
 .. _`nginx`: https://www.nginx.com/resources/wiki/start/topics/tutorials/install/
 .. _`postgres`: https://www.postgresql.org/download/
-.. _`yarn`: https://classic.yarnpkg.com/lang/en/docs/install/
+.. _`npm`: https://docs.npmjs.com/cli/
 .. _`yamk`: https://yamk.readthedocs.io/en/stable/installation.html
 .. _`pyenv`: https://github.com/pyenv/pyenv#installation
 .. _`poetry`: https://python-poetry.org/docs/

@@ -1,7 +1,8 @@
 from collections import defaultdict
+from typing import Any
 
 from django.conf import settings
-from django.core.management.base import CommandError
+from django.core.management.base import CommandError, CommandParser
 from django.core.management.commands.makemigrations import Command as MakeMigrations
 from django.db.migrations.loader import MigrationLoader
 
@@ -11,19 +12,19 @@ from {{cookiecutter.project_name}}.lib.utils import hash_migrations
 class Command(MakeMigrations):
     help = "Check if migrations are as expected"  # noqa: A003
 
-    def add_arguments(self, parser):
+    def add_arguments(self, parser: CommandParser) -> None:
         pass
 
     @staticmethod
-    def check_hashes():
+    def check_hashes() -> None:
         actual_hashes = hash_migrations()
-        with open(settings.MIGRATION_HASHES_PATH) as file:
+        with settings.MIGRATION_HASHES_PATH.open() as file:
             saved_hashes = [line.strip() for line in file.readlines()]
         if actual_hashes != saved_hashes:
             raise CommandError("Migration hashes have changed!")
 
     @staticmethod
-    def check_naming():
+    def check_naming() -> None:
         loader = MigrationLoader(None, ignore_no_migrations=True)
         nodes = loader.graph.nodes
         app_migrations = defaultdict(list)
@@ -42,15 +43,15 @@ class Command(MakeMigrations):
             if migration_numbers[-1] != n:
                 raise CommandError(f"There is a skipped prefix in {app_name}")
 
-    def handle(self, *args, **options):
+    def handle(self, *args, **options: Any) -> None:
         options["check_changes"] = True
         options["dry_run"] = True
         options["interactive"] = False
         options["merge"] = False
         options["empty"] = False
-        options["scriptable"] = False
         options["name"] = ""
         options["include_header"] = False
+        options["scriptable"] = False
         super().handle(*args, **options)
         self.check_naming()
         self.check_hashes()

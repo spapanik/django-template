@@ -1,8 +1,10 @@
+from typing import Any
+
 from grappelli.dashboard import Dashboard, modules
 
 
 class AdminDashboard(Dashboard):
-    def init_with_context(self, context):
+    def init_with_context(self, context: list[dict[str, Any]]) -> None:  # noqa: ARG002
         self.children.append(
             modules.Group(
                 "Group: Administration & Applications",
@@ -15,7 +17,7 @@ class AdminDashboard(Dashboard):
                         models=["django.contrib.auth.models.Group"],
                     ),
                     modules.ModelList(
-                        "Users", column=1, models=["{{cookiecutter.project_name}}.authentication.models.User"]
+                        "Users", column=1, models=["{{cookiecutter.project_name}}.registration.models.User"]
                     ),
                 ],
             )

@@ -15,10 +15,12 @@
     {% include "branding/favicons.html" %}
 
     {% block css %}
+        <link href="{% static 'lib/css/base.css' %}" rel="stylesheet">
         {% block css_extra %}{% endblock %}
     {% endblock %}
 
     {% block javascript %}
+        <script src="{% static 'lib/js/base.js' %}"></script>
         {% block javascript_extra %}{% endblock %}
     {% endblock %}
 </head>

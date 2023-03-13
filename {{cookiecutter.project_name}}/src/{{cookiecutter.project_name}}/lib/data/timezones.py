@@ -1,7 +1,3 @@
-"""
-Sets of problematic timezones
-"""
-
 DEPRECATED_TIMEZONES = {
     "Africa/Asmera",
     "Africa/Timbuktu",
@@ -193,7 +189,7 @@ NON_IANA_TIMEZONES = {
 # Timezones that don't appear in all systems yet
 PROPOSED_TIMEZONES = {"Pacific/Kanton"}
 
-# All the timezones that are not present in all systems
+# All unavailable timezones
 UNAVAILABLE_TIMEZONES = set.union(
     DEPRECATED_TIMEZONES, NON_IANA_TIMEZONES, PROPOSED_TIMEZONES
 )

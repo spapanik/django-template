@@ -1,15 +1,10 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo, available_timezones
 
-from django.conf import settings
-
 from {{cookiecutter.project_name}}.lib.data.timezones import UNAVAILABLE_TIMEZONES
 
 UTC = ZoneInfo("UTC")
 
-
-def now(local_timezone: ZoneInfo = settings.TZ_INFO) -> datetime:
-    return datetime.now(ZoneInfo("UTC")).astimezone(local_timezone)
 
 def get_timezones() -> set[str]:
     """
@@ -21,7 +16,11 @@ def get_timezones() -> set[str]:
     return available_timezones() - UNAVAILABLE_TIMEZONES
 
 
-def from_iso(date_string: str, local_timezone: ZoneInfo = settings.TZ_INFO) -> datetime:
+def now(tz_info: ZoneInfo = UTC) -> datetime:
+    return datetime.now(UTC).astimezone(tz_info)
+
+
+def from_iso(date_string: str, tz_info: ZoneInfo = UTC) -> datetime:
     """
     Get datetime from an iso string
 
@@ -30,22 +29,20 @@ def from_iso(date_string: str, local_timezone: ZoneInfo = settings.TZ_INFO) -> d
     date_string = date_string.replace("Z", "+00:00")
     dt = datetime.fromisoformat(date_string)
     try:
-        return add_timezone(dt, local_timezone)
+        return add_timezone(dt, tz_info)
     except ValueError:
-        return convert_timezone(dt, local_timezone)
+        return convert_timezone(dt, tz_info)
 
 
-def from_timestamp(
-    timestamp: float, local_timezone: ZoneInfo = settings.TZ_INFO
-) -> datetime:
+def from_timestamp(timestamp: float, tz_info: ZoneInfo = UTC) -> datetime:
     """
     Get a datetime tz-aware time object from a timestamp
     """
-    utc_dt = add_timezone(datetime.fromtimestamp(timestamp))
-    return convert_timezone(utc_dt, local_timezone)
+    utc_dt = datetime.fromtimestamp(timestamp, tz=UTC)
+    return convert_timezone(utc_dt, tz_info)
 
 
-def add_timezone(dt: datetime, local_timezone: ZoneInfo = settings.TZ_INFO) -> datetime:
+def add_timezone(dt: datetime, tz_info: ZoneInfo = UTC) -> datetime:
     """
     Add a timezone to a naive datetime
 
@@ -53,12 +50,10 @@ def add_timezone(dt: datetime, local_timezone: ZoneInfo = settings.TZ_INFO) -> d
     """
     if dt.tzinfo is not None:
         raise ValueError(f"{dt} is already tz-aware")
-    return dt.replace(tzinfo=local_timezone)
+    return dt.replace(tzinfo=tz_info)
 
 
-def convert_timezone(
-    dt: datetime, local_timezone: ZoneInfo = settings.TZ_INFO
-) -> datetime:
+def convert_timezone(dt: datetime, tz_info: ZoneInfo = UTC) -> datetime:
     """
     Change the timezone of a tz-aware datetime
 
@@ -66,4 +61,4 @@ def convert_timezone(
     """
     if dt.tzinfo is None:
         raise ValueError(f"{dt} is a naive datetime")
-    return dt.astimezone(local_timezone)
+    return dt.astimezone(tz_info)

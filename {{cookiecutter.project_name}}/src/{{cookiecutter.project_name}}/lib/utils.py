@@ -3,7 +3,7 @@ import logging
 from collections.abc import Callable
 from functools import wraps
 from pathlib import Path
-from typing import Any
+from typing import Any, ParamSpec
 
 from django.conf import settings
 from django.db.migrations.loader import MigrationLoader
@@ -11,6 +11,7 @@ from django.db.migrations.writer import MigrationWriter
 
 logger = logging.getLogger(__name__)
 INGEST_ERROR = "Function `%s` threw `%s` when called with args=%s and kwargs=%s"
+P = ParamSpec("P")
 
 
 def handle_exceptions(
@@ -19,9 +20,9 @@ def handle_exceptions(
     default: Any = None,
     log_level: str = "info",
 ) -> Any:
-    def decorator(func: Callable[..., Any]) -> Any:
+    def decorator(func: Callable[P, Any]) -> Callable[P, Any]:
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: P.args, **kwargs: P.kwargs) -> Any:
             try:
                 return func(*args, **kwargs)
             except exceptions as exc:
@@ -40,10 +41,10 @@ def handle_exceptions(
     return decorator
 
 
-def hash_file(path: Path | str, buffer_size=2**16) -> str:
+def hash_file(path: Path, buffer_size: int = 2**16) -> str:
     sha256 = hashlib.sha256()
 
-    with open(path, "rb") as f:
+    with path.open("rb") as f:
         while data := f.read(buffer_size):
             sha256.update(data)
 
@@ -57,5 +58,5 @@ def hash_migrations() -> list[str]:
     for (app, migration_name), migration in loader.graph.nodes.items():
         path = MigrationWriter(migration).path
         if path.startswith(source):
-            hashes.append(f"{app}::{migration_name}::{hash_file(path)}")
+            hashes.append(f"{app}::{migration_name}::{hash_file(Path(path))}")
     return sorted(hashes)

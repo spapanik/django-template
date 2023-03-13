@@ -1,3 +1,6 @@
+import os
+from pathlib import Path
+
 import pytest
 
 from {{cookiecutter.project_name}}.lib import utils
@@ -23,7 +26,7 @@ def test_handle_exceptions_unhandled_exception():
 
 def test_hash_file():
     dev_null_hash = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    assert utils.hash_file("/dev/null") == dev_null_hash
+    assert utils.hash_file(Path(os.devnull)) == dev_null_hash
 
 
 def test_hash_migrations():
@@ -31,5 +34,5 @@ def test_hash_migrations():
         app: migration
         for app, migration, *_ in (h.split("::") for h in utils.hash_migrations())
     }
-    assert "authentication" in hashed_migrations
-    assert "0001_initial" in hashed_migrations["authentication"]
+    assert "registration" in hashed_migrations
+    assert "0001_initial" in hashed_migrations["registration"]
