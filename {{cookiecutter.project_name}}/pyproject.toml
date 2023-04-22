@@ -12,6 +12,8 @@ disallow_any_generics = true
 ignore_missing_imports = true
 no_implicit_reexport = true
 show_error_codes = true
+strict_concatenate = true
+strict_equality = true
 warn_return_any = true
 warn_redundant_casts = true
 warn_unused_ignores = true
@@ -64,6 +66,7 @@ target-version = "py311"
 
 [tool.ruff.per-file-ignores]
 "tests/**" = [
+    "FBT001",
     "PT011",
     "S101",
 ]
@@ -81,7 +84,7 @@ forced-separate = ["tests"]
 split-on-trailing-comma = false
 
 [tool.pytest.ini_options]
-addopts = "-vv --cov --cov-report=term-missing:skip-covered --reuse-db"
+addopts = "-vv --reuse-db"
 testpaths = "tests"
 
 [tool.coverage.run]
@@ -98,6 +101,11 @@ omit = [
     "src/{{cookiecutter.project_name}}/home/management/commands/checkmigrations.py",
 ]
 
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+skip_empty = true
+
 [tool.poetry]
 name = "{{cookiecutter.project_name}}"
 version = "0.1.0"
@@ -113,28 +121,28 @@ python = "^3.11"
 
 # dependencies
 dj-settings = "~4.2"
-Django = "~4.1"
+Django = "~4.2"
 django-grappelli = "~3.0"
 gunicorn = "~20.1"
 pathurl = "~0.5"
-psycopg2 = "~2.9"
+psycopg = "~3.1"
 uvicorn = "~0.21"
 
 [tool.poetry.group.dev.dependencies]
 django-extensions = "~3.2"
 ipdb = "~0.13"
-ipython = "~8.11"
-pipdeptree = "~2.5"
+ipython = "~8.12"
+pipdeptree = "~2.7"
 Werkzeug = "~2.2"
 
 [tool.poetry.group.lint.dependencies]
-black = "~23.1"
-mypy = "~1.1"
+black = "~23.3"
+mypy = "~1.2"
 ruff = "~0.0"
 
 [tool.poetry.group.test.dependencies]
 factory-boy = "~3.2"
 freezegun = "~1.2"
-pytest = "~7.2"
+pytest = "~7.3"
 pytest-cov = "~4.0"
 pytest-django = "~4.5"

@@ -1,6 +1,6 @@
 ["$globals"]
 shell = "bash"
-version = "4"
+version = 5
 
 ["$globals".vars]
 "[weak]DJANGO_SETTINGS_MODULE" = "{{cookiecutter.project_name}}.settings"
@@ -16,21 +16,36 @@ css_map = "--no-source-map"
 css_dir = "src/{cookiecutter.project_name}}/lib/static/lib/css"
 js_dir = "src/{cookiecutter.project_name}}/lib/static/lib/js"
 
-[all]
-alias = "install"
-
 [update]
-alias = "install"
+phony = true
+keep_ts = true
+requires = [
+    "install_py",
+    "static",
+    "migrations",
+]
+
+[install_state]
+phony = true
+keep_ts = true
+requires = [
+    "migrations",
+]
+
+[install_code]
+phony = true
+keep_ts = true
+requires = [
+    "install_py",
+    "static",
+]
 
 [install]
 phony = true
 keep_ts = true
 requires = [
-    "install_py",
-    "db",
-    "migrations",
-    "translations",
-    "static",
+    "install_code",
+    "install_state",
 ]
 
 [runserver]

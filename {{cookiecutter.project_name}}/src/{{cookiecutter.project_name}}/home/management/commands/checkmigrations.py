@@ -43,7 +43,7 @@ class Command(MakeMigrations):
             if migration_numbers[-1] != n:
                 raise CommandError(f"There is a skipped prefix in {app_name}")
 
-    def handle(self, *args, **options: Any) -> None:
+    def handle(self, *args: Any, **options: Any) -> None:
         options["check_changes"] = True
         options["dry_run"] = True
         options["interactive"] = False
@@ -52,6 +52,7 @@ class Command(MakeMigrations):
         options["name"] = ""
         options["include_header"] = False
         options["scriptable"] = False
+        options["update"] = False
         super().handle(*args, **options)
         self.check_naming()
         self.check_hashes()

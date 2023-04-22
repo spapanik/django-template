@@ -12,7 +12,7 @@ class TestBaseModel:
     """
 
     @property
-    def emails(self):
+    def emails(self) -> set[str]:
         return {
             "user1@gmail.com",
             "user2@gmail.com",
@@ -20,7 +20,7 @@ class TestBaseModel:
         }
 
     @pytest.fixture(autouse=True)
-    def _create_users(self):
+    def _create_users(self) -> None:
         users = [
             User(email=email, is_superuser=False, is_staff=False)
             for email in self.emails
@@ -28,24 +28,24 @@ class TestBaseModel:
         User.objects.bulk_create(users)
 
     @pytest.mark.django_db()
-    def test_bulk_create(self):
+    def test_bulk_create(self) -> None:
         assert User.objects.count() == 3
 
     @pytest.mark.django_db()
-    def test_random(self):
+    def test_random(self) -> None:
         assert User.objects.random().email in self.emails
 
     @pytest.mark.django_db()
-    def test_flat_values(self):
+    def test_flat_values(self) -> None:
         assert set(User.objects.flat_values("email")) == self.emails
 
     @pytest.mark.django_db()
-    def test_update(self):
+    def test_update(self) -> None:
         User.objects.all().update(is_staff=True)
         assert User.objects.filter(is_staff=True).count() == 3
 
     @pytest.mark.django_db()
-    def test_bulk_update(self):
+    def test_bulk_update(self) -> None:
         users = []
         for user in User.objects.all():
             user.is_staff = True

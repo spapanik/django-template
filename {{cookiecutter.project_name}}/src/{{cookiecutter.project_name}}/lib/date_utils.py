@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, tzinfo
 from zoneinfo import ZoneInfo, available_timezones
 
 from {{cookiecutter.project_name}}.lib.data.timezones import UNAVAILABLE_TIMEZONES
@@ -20,7 +20,7 @@ def now(tz_info: ZoneInfo = UTC) -> datetime:
     return datetime.now(UTC).astimezone(tz_info)
 
 
-def from_iso(date_string: str, tz_info: ZoneInfo = UTC) -> datetime:
+def from_iso(date_string: str, tz_info: tzinfo = UTC) -> datetime:
     """
     Get datetime from an iso string
 
@@ -34,7 +34,7 @@ def from_iso(date_string: str, tz_info: ZoneInfo = UTC) -> datetime:
         return convert_timezone(dt, tz_info)
 
 
-def from_timestamp(timestamp: float, tz_info: ZoneInfo = UTC) -> datetime:
+def from_timestamp(timestamp: float, tz_info: tzinfo = UTC) -> datetime:
     """
     Get a datetime tz-aware time object from a timestamp
     """
@@ -42,7 +42,7 @@ def from_timestamp(timestamp: float, tz_info: ZoneInfo = UTC) -> datetime:
     return convert_timezone(utc_dt, tz_info)
 
 
-def add_timezone(dt: datetime, tz_info: ZoneInfo = UTC) -> datetime:
+def add_timezone(dt: datetime, tz_info: tzinfo = UTC) -> datetime:
     """
     Add a timezone to a naive datetime
 
@@ -53,7 +53,7 @@ def add_timezone(dt: datetime, tz_info: ZoneInfo = UTC) -> datetime:
     return dt.replace(tzinfo=tz_info)
 
 
-def convert_timezone(dt: datetime, tz_info: ZoneInfo = UTC) -> datetime:
+def convert_timezone(dt: datetime, tz_info: tzinfo = UTC) -> datetime:
     """
     Change the timezone of a tz-aware datetime
 

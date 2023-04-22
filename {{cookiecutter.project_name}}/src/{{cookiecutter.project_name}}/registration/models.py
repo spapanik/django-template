@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import cast
+from typing import cast, Any
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
@@ -12,7 +12,7 @@ from {{cookiecutter.project_name}}.lib.models import BaseManager, BaseModel, Bas
 class UserManager(BaseUserManager, BaseManager.from_queryset(BaseQuerySet)):  # type: ignore[misc]
     use_in_migrations = True
 
-    def _create_user(self, email: str, password: str | None, **extra_fields) -> User:
+    def _create_user(self, email: str, password: str | None, **extra_fields: Any) -> User:
         if not email:
             raise ValueError("An email must be set")
 
@@ -23,14 +23,14 @@ class UserManager(BaseUserManager, BaseManager.from_queryset(BaseQuerySet)):  # 
         return cast(User, user)
 
     def create_user(
-        self, email: str, password: str | None = None, **extra_fields
+        self, email: str, password: str | None = None, **extra_fields: Any
     ) -> User:
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(
-        self, email: str, password: str | None = None, **extra_fields
+        self, email: str, password: str | None = None, **extra_fields: Any
     ) -> User:
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
@@ -47,7 +47,7 @@ class User(AbstractUser, BaseModel):
     username = None
     first_name = None
     last_name = None
-    email = models.EmailField(unique=True)
+    email: str = models.EmailField(unique=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS: list[str] = []

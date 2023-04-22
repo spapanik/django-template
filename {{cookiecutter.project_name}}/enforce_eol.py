@@ -6,7 +6,7 @@ from pathlib import Path
 from traceback import print_exc
 
 
-def assert_eol_characters(filename):
+def assert_eol_characters(filename: Path) -> None:
     size = filename.stat().st_size
     if size == 0:
         return
@@ -39,7 +39,7 @@ def gather_files() -> Iterator[Path]:
             yield file
 
 
-def main():
+def main() -> None:
     failed = False
     for file in gather_files():
         try:
