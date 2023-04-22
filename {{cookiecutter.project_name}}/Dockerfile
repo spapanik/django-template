@@ -1,7 +1,7 @@
-FROM spapanik/django-api:1.0.0
+FROM spapanik/django-api:1.2.0
 
 ENV DJANGO_USER=reinhardt
-ENV WEBSERVER="/home/${DJANGO_USER}/volteras"
+ENV WEBSERVER="/home/${DJANGO_USER}/{{cookiecutter.project_name}}"
 ENV DJANGO_SETTINGS_MODULE={{cookiecutter.project_name}}.settings
 ENV webserver_netloc="0.0.0.0:8000"
 
