@@ -140,4 +140,4 @@ GRAPPELLI_ADMIN_TITLE = "{{cookiecutter.project_name}}"
 # endregion
 
 with contextlib.suppress(ImportError):
-    from kuma.local.settings import *  # noqa: F403
+    from {{cookiecutter.project_name}}.local.settings import *  # noqa: F403
