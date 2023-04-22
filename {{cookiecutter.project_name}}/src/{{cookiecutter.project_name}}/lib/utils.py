@@ -3,7 +3,7 @@ import logging
 from collections.abc import Callable
 from functools import wraps
 from pathlib import Path
-from typing import Any, ParamSpec
+from typing import ParamSpec, TypeVar
 
 from django.conf import settings
 from django.db.migrations.loader import MigrationLoader
@@ -12,17 +12,18 @@ from django.db.migrations.writer import MigrationWriter
 logger = logging.getLogger(__name__)
 INGEST_ERROR = "Function `%s` threw `%s` when called with args=%s and kwargs=%s"
 P = ParamSpec("P")
+R = TypeVar("R", covariant=True)
 
 
 def handle_exceptions(
     *,
     exceptions: tuple[type[Exception], ...] = (Exception,),
-    default: Any = None,
+    default: R | None = None,
     log_level: str = "info",
-) -> Any:
-    def decorator(func: Callable[P, Any]) -> Callable[P, Any]:
+) -> Callable[[Callable[P, R]], Callable[P, R | None]]:
+    def decorator(func: Callable[P, R]) -> Callable[P, R | None]:
         @wraps(func)
-        def wrapper(*args: P.args, **kwargs: P.kwargs) -> Any:
+        def wrapper(*args: P.args, **kwargs: P.kwargs) -> R | None:
             try:
                 return func(*args, **kwargs)
             except exceptions as exc:

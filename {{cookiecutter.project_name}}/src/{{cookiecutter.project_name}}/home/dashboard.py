@@ -3,7 +3,7 @@ from typing import Any
 from grappelli.dashboard import Dashboard, modules
 
 
-class AdminDashboard(Dashboard):
+class AdminDashboard(Dashboard):  # type: ignore[misc]
     def init_with_context(self, context: list[dict[str, Any]]) -> None:  # noqa: ARG002
         self.children.append(
             modules.Group(

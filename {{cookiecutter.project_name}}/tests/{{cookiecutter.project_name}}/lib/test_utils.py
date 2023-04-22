@@ -7,16 +7,16 @@ from {{cookiecutter.project_name}}.lib import utils
 
 
 def test_handle_exceptions_handled_exception() -> None:
-    @utils.handle_exceptions(exceptions=(ZeroDivisionError,), default="BOOM!")
+    @utils.handle_exceptions(exceptions=(ZeroDivisionError,), default=0.0)
     def invert(n: int) -> float:
         return 1 / n
 
     assert invert(1) == 1
-    assert invert(0) == "BOOM!"
+    assert invert(0) == 0
 
 
 def test_handle_exceptions_unhandled_exception() -> None:
-    @utils.handle_exceptions(exceptions=(TypeError,), default="BOOM!")
+    @utils.handle_exceptions(exceptions=(TypeError,), default=0.0)
     def invert(n: int) -> float:
         return 1 / n
 

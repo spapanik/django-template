@@ -2,7 +2,7 @@ from {{cookiecutter.project_name}}.lib import choices
 
 
 class TestChoices:
-    def test_choices(self):
+    def test_choices(self) -> None:
         class Options(choices.Choices):
             CHOICE1 = "choice1"
             CHOICE2 = "choice2"

@@ -1,3 +1,6 @@
+from collections.abc import Callable
+from typing import Any
+
 import pytest
 
 from {{cookiecutter.project_name}}.registration.models import User
@@ -5,7 +8,9 @@ from {{cookiecutter.project_name}}.registration.models import User
 
 @pytest.mark.django_db()
 @pytest.mark.parametrize("superuser", [True, False])
-def test_user_created(superuser: bool, django_assert_num_queries) -> None:
+def test_user_created(
+    superuser: bool, django_assert_num_queries: Callable[[int], Any]
+) -> None:
     email = "carl.sagan@kuma.ai"
     method = User.objects.create_superuser if superuser else User.objects.create_user
     with django_assert_num_queries(1):

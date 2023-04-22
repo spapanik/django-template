@@ -7,8 +7,14 @@ target-version = ["py311"]
 
 [tool.mypy]
 exclude = "/migrations/"
+
 check_untyped_defs = true
 disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+disallow_untyped_defs = true
 ignore_missing_imports = true
 no_implicit_reexport = true
 show_error_codes = true
@@ -19,6 +25,11 @@ warn_redundant_casts = true
 warn_unused_ignores = true
 warn_unreachable = true
 warn_unused_configs = true
+
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "{{cookiecutter.project_name}}.settings"
 
 [tool.ruff]
 select = [
@@ -123,6 +134,7 @@ python = "^3.11"
 dj-settings = "~4.2"
 Django = "~4.2"
 django-grappelli = "~3.0"
+django-stubs = "~1.16"
 gunicorn = "~20.1"
 pathurl = "~0.5"
 psycopg = "~3.1"

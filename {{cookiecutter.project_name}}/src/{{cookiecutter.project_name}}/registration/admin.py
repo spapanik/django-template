@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
@@ -6,7 +8,7 @@ from {{cookiecutter.project_name}}.registration.models import User
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    fieldsets = [
+    fieldsets: list[list[Any]] = [  # type: ignore[assignment]
         [None, {"fields": ["email", "password"]}],
         ["Permissions", {"fields": ["is_active", "is_staff", "is_superuser"]}],
         ["Important dates", {"fields": ["last_login", "date_joined"]}],

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import Any
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
@@ -9,7 +9,7 @@ from django.db import models
 from {{cookiecutter.project_name}}.lib.models import BaseManager, BaseModel, BaseQuerySet
 
 
-class UserManager(BaseUserManager, BaseManager.from_queryset(BaseQuerySet)):  # type: ignore[misc]
+class UserManager(BaseUserManager["User"], BaseManager.from_queryset(BaseQuerySet["User"])):  # type: ignore[misc]
     use_in_migrations = True
 
     def _create_user(
@@ -22,7 +22,7 @@ class UserManager(BaseUserManager, BaseManager.from_queryset(BaseQuerySet)):  # 
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
-        return cast(User, user)
+        return user
 
     def create_user(
         self, email: str, password: str | None = None, **extra_fields: Any
@@ -46,10 +46,10 @@ class UserManager(BaseUserManager, BaseManager.from_queryset(BaseQuerySet)):  # 
 
 
 class User(AbstractUser, BaseModel):
-    username = None
-    first_name = None
-    last_name = None
-    email: str = models.EmailField(unique=True)
+    username = None  # type: ignore[assignment]
+    first_name = None  # type: ignore[assignment]
+    last_name = None  # type: ignore[assignment]
+    email = models.EmailField(unique=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS: list[str] = []
