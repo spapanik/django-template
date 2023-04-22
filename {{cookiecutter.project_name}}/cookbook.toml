@@ -13,8 +13,8 @@ poetry_sync = "--sync"
 input = "--no-input"
 css_style = "expanded"
 css_map = "--no-source-map"
-css_dir = "src/{cookiecutter.project_name}}/lib/static/lib/css"
-js_dir = "src/{cookiecutter.project_name}}/lib/static/lib/js"
+css_dir = "src/{{cookiecutter.project_name}}/lib/static/lib/css"
+js_dir = "src/{{cookiecutter.project_name}}/lib/static/lib/js"
 
 [update]
 phony = true
