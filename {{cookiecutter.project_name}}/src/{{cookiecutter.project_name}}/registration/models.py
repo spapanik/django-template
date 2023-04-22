@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import cast, Any
+from typing import Any, cast
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
@@ -12,7 +12,9 @@ from {{cookiecutter.project_name}}.lib.models import BaseManager, BaseModel, Bas
 class UserManager(BaseUserManager, BaseManager.from_queryset(BaseQuerySet)):  # type: ignore[misc]
     use_in_migrations = True
 
-    def _create_user(self, email: str, password: str | None, **extra_fields: Any) -> User:
+    def _create_user(
+        self, email: str, password: str | None, **extra_fields: Any
+    ) -> User:
         if not email:
             raise ValueError("An email must be set")
 

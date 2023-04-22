@@ -30,14 +30,14 @@ def test_get_timezones() -> None:
     ],
 )
 @pytest.mark.parametrize("tz_info", TEST_TIMEZONES)
-def test_from_iso(date_string: str, tz_info: ZoneInfo) -> None:
+def test_from_iso(date_string: str, tz_info: tzinfo) -> None:
     dt = date_utils.from_iso(date_string, tz_info)
     assert dt.tzinfo == tz_info
     assert dt.timestamp() == 1640995200
 
 
 @pytest.mark.parametrize("tz_info", TEST_TIMEZONES)
-def test_from_timestamp(tz_info: ZoneInfo) -> None:
+def test_from_timestamp(tz_info: tzinfo) -> None:
     dt = date_utils.from_timestamp(0, tz_info)
     assert dt.tzinfo == tz_info
     assert dt.timestamp() == 0
@@ -51,7 +51,7 @@ def test_from_timestamp(tz_info: ZoneInfo) -> None:
         (ZoneInfo("Asia/Tokyo"), datetime(2021, 12, 31, 15, tzinfo=ZoneInfo("UTC"))),
     ],
 )
-def test_add_timezone_to_naive_datetime(tz_info: ZoneInfo, expected: datetime) -> None:
+def test_add_timezone_to_naive_datetime(tz_info: tzinfo, expected: datetime) -> None:
     dt = datetime(2022, 1, 1)  # noqa: DTZ001
     assert date_utils.add_timezone(dt, tz_info) == expected
 
@@ -62,7 +62,7 @@ def test_add_timezone_to_tz_aware_datetime() -> None:
 
 
 @pytest.mark.parametrize("tz_info", TEST_TIMEZONES)
-def test_convert_does_not_change_timestamp(tz_info: ZoneInfo) -> None:
+def test_convert_does_not_change_timestamp(tz_info: tzinfo) -> None:
     dt = datetime(2022, 1, 1, tzinfo=ZoneInfo("Asia/Tokyo"))
     assert date_utils.convert_timezone(dt, tz_info) == dt
 

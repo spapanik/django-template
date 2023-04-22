@@ -1,5 +1,4 @@
-from pytest import fixture
-
+import pytest
 from django.test import Client
 
 
@@ -9,6 +8,6 @@ class HttpTestClient(Client):
         super().__init__(*args, **kwargs)
 
 
-@fixture
+@pytest.fixture()
 def http_client() -> HttpTestClient:
     return HttpTestClient()

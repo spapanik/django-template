@@ -1,8 +1,6 @@
-from collections.abc import Callable
-
 import pytest
 
-from kuma.registration.models import User
+from {{cookiecutter.project_name}}.registration.models import User
 
 
 @pytest.mark.django_db()
