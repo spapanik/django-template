@@ -28,8 +28,8 @@ class Command(MakeMigrations):
 
     def format_migration(self, migration: Migration) -> None:
         writer = MigrationWriter(migration, self.include_header)
-        subprocess.run(["black", writer.path])
-        subprocess.run(["ruff", "--fix-only", writer.path])
+        subprocess.run(["black", writer.path])  # noqa: S603,S607
+        subprocess.run(["ruff", "--fix-only", writer.path])  # noqa: S603,S607
 
     def write_migration_files(self, changes: dict[str, list[Migration]]) -> None:
         super().write_migration_files(changes)
