@@ -2,11 +2,13 @@ import contextlib
 import pathlib
 from functools import partial
 
+import django_stubs_ext
 from dj_settings.utils import setting
 from pathurl import URL
 
 BASE_DIR = pathlib.Path(__file__).parents[2]
 project_setting = partial(setting, base_dir=BASE_DIR, filename="{{cookiecutter.project_name}}.yml")
+django_stubs_ext.monkeypatch()
 
 # region Security
 validation = "django.contrib.auth.password_validation"
