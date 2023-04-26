@@ -1,7 +1,9 @@
 import os
+from collections import defaultdict
 from pathlib import Path
 
 import pytest
+from django.conf import settings
 
 from {{cookiecutter.project_name}}.lib import utils
 
@@ -30,9 +32,9 @@ def test_hash_file() -> None:
 
 
 def test_hash_migrations() -> None:
-    hashed_migrations = {
-        app: migration
-        for app, migration, *_ in (h.split("::") for h in utils.hash_migrations())
-    }
+    hashed_migrations = defaultdict(list)
+    for hashed_migration in utils.hash_migrations():
+        app, name, _ = hashed_migration.split("::")
+        hashed_migrations[app].append(name)
     assert "registration" in hashed_migrations
     assert "0001_initial" in hashed_migrations["registration"]
