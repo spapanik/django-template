@@ -145,7 +145,7 @@ django-extensions = "~3.2"
 ipdb = "~0.13"
 ipython = "~8.12"
 pipdeptree = "~2.7"
-Werkzeug = "~2.2"
+Werkzeug = "~2.3"
 
 [tool.poetry.group.lint.dependencies]
 black = "~23.3"
