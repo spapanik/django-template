@@ -64,11 +64,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_at",
-                    models.DateTimeField(default=yo.lib.date_utils.now, editable=False),
+                    models.DateTimeField(default={{cookiecutter.project_name}}.lib.date_utils.now, editable=False),
                 ),
                 (
                     "updated_at",
-                    models.DateTimeField(default=yo.lib.date_utils.now, editable=False),
+                    models.DateTimeField(default={{cookiecutter.project_name}}.lib.date_utils.now, editable=False),
                 ),
                 ("email", models.EmailField(max_length=254, unique=True)),
                 (
@@ -101,7 +101,7 @@ class Migration(migrations.Migration):
                 "swappable": "AUTH_USER_MODEL",
             },
             managers=[
-                ("objects", yo.registration.models.UserManager()),
+                ("objects", {{cookiecutter.project_name}}.registration.models.UserManager()),
             ],
         ),
     ]
