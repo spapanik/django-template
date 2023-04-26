@@ -9,18 +9,18 @@ class BaseView(View):
     template_name: str
 
     @staticmethod
-    def get_context_data(**kwargs: Any) -> dict[str, Any]:
+    async def get_context_data(**kwargs: Any) -> dict[str, Any]:
         return kwargs
 
-    def get_template_name(self, **_kwargs: Any) -> str:
+    async def get_template_name(self, **_kwargs: Any) -> str:
         return self.template_name
 
-    def render(self, context: dict[str, Any]) -> HttpResponse:
-        template = self.get_template_name(**context)
+    async def render(self, context: dict[str, Any]) -> HttpResponse:
+        template = await self.get_template_name(**context)
         return render(self.request, template, context)
 
-    def get(
+    async def get(
         self, request: HttpRequest, *_args: Any, **kwargs: Any  # noqa: ARG002
     ) -> HttpResponse:
-        context = self.get_context_data(**kwargs)
-        return self.render(context)
+        context = await self.get_context_data(**kwargs)
+        return await self.render(context)
