@@ -8,6 +8,7 @@ runner = "poetry run"
 env_vars = "DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}"
 admin = "${env_vars} ${runner} django-admin"
 "[weak]PGDATABASE" = "{{cookiecutter.project_name}}"
+webserver_host = "0.0.0.0"
 webserver_port = "8000"
 static_verbosity = "0"
 poetry_sync = "--sync"
@@ -55,7 +56,7 @@ requires = [
     "install",
 ]
 commands = [
-    "uvicorn {{cookiecutter.project_name}}.asgi:application --reload --host 0.0.0.0 --port ${webserver_port}",
+    "${admin} runserver_plus ${webserver_host}:${webserver_port}"
 ]
 
 [install_py]
