@@ -9,7 +9,7 @@ services:
       POSTGRES_DB: {{cookiecutter.project_name}}
       POSTGRES_PASSWORD: M6hzeBBQxdNi4eYVY6GD
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - {{cookiecutter.project_name}}-pgdata:/var/lib/postgresql/data
     expose:
       - "5432"
 
