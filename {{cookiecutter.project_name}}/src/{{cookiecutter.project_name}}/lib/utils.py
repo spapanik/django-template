@@ -8,6 +8,7 @@ from typing import ParamSpec, TypeVar
 from django.conf import settings
 from django.db.migrations.loader import MigrationLoader
 from django.db.migrations.writer import MigrationWriter
+from pathurl import URL, Query
 
 logger = logging.getLogger(__name__)
 INGEST_ERROR = "Function `%s` threw `%s` when called with args=%s and kwargs=%s"
@@ -40,6 +41,16 @@ def handle_exceptions(
         return wrapper
 
     return decorator
+
+
+def get_app_url(path: str, **kwargs: str | list[str]) -> URL:
+    return URL.from_parts(
+        scheme=settings.BASE_SCHEME,
+        hostname=settings.BASE_DOMAIN,
+        port=settings.BASE_PORT,
+        path=path,
+        query=Query.from_dict(dict_={}, **kwargs),
+    )
 
 
 def hash_file(path: Path, buffer_size: int = 2**16) -> str:

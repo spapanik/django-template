@@ -4,7 +4,6 @@ from functools import partial
 
 import django_stubs_ext
 from dj_settings.utils import setting
-from pathurl import URL
 
 BASE_DIR = pathlib.Path(__file__).parents[2]
 project_setting = partial(setting, base_dir=BASE_DIR, filename="{{cookiecutter.project_name}}.yml")
@@ -40,9 +39,13 @@ if BASE_SCHEME == "https":
 
 # region Application definition
 DEBUG = project_setting("DEBUG", sections=["project", "app"], rtype=bool, default=True)
-BASE_DOMAIN = project_setting("BASE_DOMAIN", sections=["project", "servers"])
+BASE_DOMAIN = project_setting(
+    "BASE_DOMAIN", sections=["project", "servers"], default="localhost"
+)
+BASE_PORT = project_setting(
+    "BASE_PORT", sections=["project", "servers"], rtype=int, default=8000
+)
 ALLOWED_HOSTS = [BASE_DOMAIN]
-BASE_URL = URL(f"{BASE_SCHEME}://{BASE_DOMAIN}")
 
 AUTH_USER_MODEL = "registration.User"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -66,6 +69,13 @@ INSTALLED_APPS = [
 if DEBUG:
     INSTALLED_APPS += [
         "django_extensions",
+    ]
+    RUNSERVER_PLUS_EXTRA_FILES = [
+        "kuma.yml",
+        *(BASE_DIR.glob("**/templates/**/*.html")),
+        *(BASE_DIR.glob("**/static/*/css/*")),
+        *(BASE_DIR.glob("**/static/*/js/*")),
+        *(BASE_DIR.glob("**/static/*/img/*")),
     ]
 
 MIDDLEWARE = [
@@ -96,7 +106,7 @@ TEMPLATES = [
 ]
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-EMAIL_FILE_PATH = BASE_DIR.joinpath("emails")
+EMAIL_FILE_PATH = BASE_DIR.joinpath("local", "emails")
 
 MIGRATION_HASHES_PATH = BASE_DIR.joinpath("migrations.lock")
 

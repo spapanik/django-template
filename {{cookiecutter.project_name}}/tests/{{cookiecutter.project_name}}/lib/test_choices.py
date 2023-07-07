@@ -1,10 +1,20 @@
+from enum import auto
+
 from {{cookiecutter.project_name}}.lib import choices
 
 
 class TestChoices:
+    def test_random(self) -> None:
+        class Options(choices.Choices):
+            CHOICE1 = auto()
+            CHOICE2 = auto()
+
+        assert Options.random() in Options
+
     def test_choices(self) -> None:
         class Options(choices.Choices):
-            CHOICE1 = "choice1"
-            CHOICE2 = "choice2"
+            CHOICE1 = auto()
+            CHOICE2 = auto()
 
-        assert Options.random() in Options.values
+        options = Options.choices()
+        assert options == sorted(options)

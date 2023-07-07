@@ -1,3 +1,5 @@
+import uuid
+
 import django.utils.timezone
 from django.db import migrations, models
 
@@ -62,6 +64,7 @@ class Migration(migrations.Migration):
                         default=django.utils.timezone.now, verbose_name="date joined"
                     ),
                 ),
+                ("uuid", models.UUIDField(default=uuid.uuid4, editable=False)),
                 (
                     "created_at",
                     models.DateTimeField(default={{cookiecutter.project_name}}.lib.date_utils.now, editable=False),

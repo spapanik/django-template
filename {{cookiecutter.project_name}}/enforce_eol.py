@@ -1,7 +1,7 @@
 #!/usr/bin/env python
+import subprocess
 import sys
 from collections.abc import Iterator
-from itertools import chain
 from pathlib import Path
 from traceback import print_exc
 
@@ -23,19 +23,13 @@ def assert_eol_characters(filename: Path) -> None:
 
 
 def gather_files() -> Iterator[Path]:
-    base_dir = Path(__file__).parent
-    files = [
-        base_dir.iterdir(),
-        base_dir.joinpath("src").rglob("*"),
-        base_dir.joinpath("tests").rglob("*"),
-    ]
     ignored_suffixes = {".ico", ".jpg", ".png"}
-    for file in chain.from_iterable(files):
-        if (
-            file.is_file()
-            and file.parent.name != "__pycache__"
-            and file.suffix not in ignored_suffixes
-        ):
+    stdout = subprocess.check_output(["git", "ls-files"])  # noqa: S603,S607
+    for filename in stdout.decode().split("\n"):
+        if not filename:
+            continue
+        file = Path(__file__).parent.joinpath(filename)
+        if file.suffix not in ignored_suffixes:
             yield file
 
 

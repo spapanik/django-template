@@ -1,5 +1,6 @@
-from collections.abc import Collection, Iterable, Sequence
+from collections.abc import Collection, Iterable
 from typing import Any, Self, TypeVar, cast
+from uuid import uuid4
 
 from django.db import models
 
@@ -9,44 +10,6 @@ from {{cookiecutter.project_name}}.lib.types import OnDeleteType
 _T = TypeVar("_T", bound=models.Model, covariant=True)
 _ST = TypeVar("_ST")
 _GT = TypeVar("_GT")
-
-
-class BaseManager(models.Manager[_T]):
-    def bulk_create(
-        self,
-        objs: Iterable[_T],
-        batch_size: int | None = None,
-        ignore_conflicts: bool = False,  # noqa: FBT001,FBT002
-        update_conflicts: bool = False,  # noqa: FBT001,FBT002
-        update_fields: Collection[str] | None = None,
-        unique_fields: Collection[str] | None = None,
-    ) -> list[_T]:
-        dt = now()
-        for obj in objs:
-            obj.updated_at = dt  # type: ignore[attr-defined]
-            obj.created_at = dt  # type: ignore[attr-defined]
-        return super().bulk_create(
-            objs,
-            batch_size,
-            ignore_conflicts,
-            update_conflicts,
-            update_fields,
-            unique_fields,
-        )
-
-    def bulk_update(
-        self, objs: Iterable[_T], fields: Sequence[str], batch_size: int | None = None
-    ) -> int:
-        dt = now()
-        for obj in objs:
-            obj.updated_at = dt  # type: ignore[attr-defined]
-        if "updated_at" not in fields:
-            fields = [*fields, "updated_at"]
-        return super().bulk_update(objs, fields, batch_size)
-
-
-def queryset_as_manager(queryset_class: type[models.QuerySet[_T]]) -> BaseManager[_T]:
-    return BaseManager.from_queryset(queryset_class)()
 
 
 class ForeignKey(models.ForeignKey[_ST, _GT]):
@@ -87,6 +50,38 @@ class OneToOneField(models.OneToOneField[_ST, _GT]):
 
 
 class BaseQuerySet(models.QuerySet[_T]):
+    def bulk_create(
+        self,
+        objs: Iterable[_T],
+        batch_size: int | None = None,
+        ignore_conflicts: bool = False,  # noqa: FBT001,FBT002
+        update_conflicts: bool = False,  # noqa: FBT001,FBT002
+        update_fields: Collection[str] | None = None,
+        unique_fields: Collection[str] | None = None,
+    ) -> list[_T]:
+        dt = now()
+        for obj in objs:
+            obj.updated_at = dt  # type: ignore[attr-defined]
+            obj.created_at = dt  # type: ignore[attr-defined]
+        return super().bulk_create(
+            objs,
+            batch_size,
+            ignore_conflicts,
+            update_conflicts,
+            update_fields,
+            unique_fields,
+        )
+
+    def bulk_update(
+        self, objs: Iterable[_T], fields: Iterable[str], batch_size: int | None = None
+    ) -> int:
+        dt = now()
+        for obj in objs:
+            obj.updated_at = dt  # type: ignore[attr-defined]
+        if "updated_at" not in fields:
+            fields = [*fields, "updated_at"]
+        return super().bulk_update(objs, fields, batch_size)
+
     def flat_values(self, key: str) -> models.QuerySet[_T]:
         return cast(models.QuerySet[_T], self.values_list(key, flat=True))
 
@@ -99,10 +94,11 @@ class BaseQuerySet(models.QuerySet[_T]):
 
 
 class BaseModel(models.Model):
+    uuid = models.UUIDField(default=uuid4, editable=False)
     created_at = models.DateTimeField(default=now, editable=False)
     updated_at = models.DateTimeField(default=now, editable=False)
 
-    objects: BaseManager[Self] = queryset_as_manager(BaseQuerySet)
+    objects: models.Manager[Self] = BaseQuerySet.as_manager()
 
     def save(self, *args: Any, **kwargs: Any) -> None:
         self.updated_at = now()

@@ -1,4 +1,4 @@
-FROM spapanik/django-app:1.3.0
+FROM spapanik/django-app:1.4.0
 
 ENV WEBSERVER="/home/${DJANGO_USER}/{{cookiecutter.project_name}}"
 ENV PYTHONBREAKPOINT=ipdb.set_trace

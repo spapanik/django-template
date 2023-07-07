@@ -3,9 +3,9 @@ from typing import Any
 
 from django.conf import settings
 from django.core.management.base import CommandError, CommandParser
-from django.core.management.commands.makemigrations import Command as MakeMigrations
 from django.db.migrations.loader import MigrationLoader
 
+from {{cookiecutter.project_name}}.home.management.commands.makemigrations import Command as MakeMigrations
 from {{cookiecutter.project_name}}.lib.utils import hash_migrations
 
 
@@ -53,6 +53,10 @@ class Command(MakeMigrations):
         options["include_header"] = False
         options["scriptable"] = False
         options["update"] = False
-        super().handle(*args, **options)
+        try:
+            super().handle(*args, **options)
+        except SystemExit as exc:
+            msg = "There are model changes not reflected in migrations"
+            raise CommandError(msg) from exc
         self.check_naming()
         self.check_hashes()

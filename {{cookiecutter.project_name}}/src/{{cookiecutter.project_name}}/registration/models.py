@@ -6,10 +6,10 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from {{cookiecutter.project_name}}.lib.models import BaseManager, BaseModel, BaseQuerySet
+from {{cookiecutter.project_name}}.lib.models import BaseModel, BaseQuerySet
 
 
-class UserManager(BaseUserManager["User"], BaseManager.from_queryset(BaseQuerySet["User"])):  # type: ignore[misc]
+class UserManager(BaseUserManager.from_queryset(BaseQuerySet["User"])):  # type: ignore[misc]
     use_in_migrations = True
 
     def _create_user(
@@ -19,7 +19,7 @@ class UserManager(BaseUserManager["User"], BaseManager.from_queryset(BaseQuerySe
             raise ValueError("An email must be set")
 
         email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+        user: User = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user

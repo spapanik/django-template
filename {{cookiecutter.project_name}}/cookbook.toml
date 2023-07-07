@@ -1,6 +1,6 @@
 ["$globals"]
 shell = "bash"
-version = 5
+version = "5.2"
 
 ["$globals".vars]
 "[weak]DJANGO_SETTINGS_MODULE" = "{{cookiecutter.project_name}}.settings"
@@ -8,8 +8,11 @@ runner = "poetry run"
 env_vars = "DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}"
 admin = "${env_vars} ${runner} django-admin"
 "[weak]PGDATABASE" = "{{cookiecutter.project_name}}"
+cert_file = "local/certs/localhost.crt"
+runserver_extra = "--cert-file ${cert_file}"
 webserver_host = "0.0.0.0"
 webserver_port = "8000"
+shell_plus_extra = "--quiet-load"
 static_verbosity = "0"
 poetry_sync = "--sync"
 input = "--no-input"
@@ -17,6 +20,7 @@ css_style = "expanded"
 css_map = "--no-source-map"
 css_dir = "src/{{cookiecutter.project_name}}/lib/static/lib/css"
 js_dir = "src/{{cookiecutter.project_name}}/lib/static/lib/js"
+img_files = "$((glob **/static/*/img/*))"
 
 [update]
 phony = true
@@ -56,7 +60,16 @@ requires = [
     "install",
 ]
 commands = [
-    "${admin} runserver_plus ${webserver_host}:${webserver_port}"
+    "${admin} runserver_plus ${webserver_host}:${webserver_port} ${runserver_extra}"
+]
+
+[shell]
+phony = true
+requires = [
+    "install",
+]
+commands = [
+    "${admin} shell_plus ${shell_plus_extra}"
 ]
 
 [install_py]
@@ -134,7 +147,7 @@ requires = [
     "install",
 ]
 commands = [
-    "${env_vars} ${runner} pytest ${pytest_args} ${pytest_path}",
+    "${env_vars} ${runner} pytest ${pytest_args} ${pytest_path} ${.extra}",
 ]
 
 ["poetry.lock"]
@@ -228,6 +241,7 @@ keep_ts = true
 requires = [
     "install_py",
     "install_js",
+    "${img_files}",
     "css",
     "js",
 ]
