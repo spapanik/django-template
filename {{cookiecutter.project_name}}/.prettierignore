@@ -15,6 +15,6 @@ package-lock.json
 
 # local dev
 /cookbook.toml.d/
-/{{cookiecutter.project_name}}.yml
+/cc_bz_project_name.yml
 local.*
 local/

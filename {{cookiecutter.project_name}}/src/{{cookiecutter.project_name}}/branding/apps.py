@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class BrandingAppConfig(AppConfig):
-    name = "{{cookiecutter.project_name}}.branding"
+    name = "cc_bz_project_name.branding"
     verbose_name = "Branding"

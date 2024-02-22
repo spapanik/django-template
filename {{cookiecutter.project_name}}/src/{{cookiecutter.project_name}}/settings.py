@@ -6,7 +6,7 @@ import django_stubs_ext
 from dj_settings.utils import setting
 
 BASE_DIR = pathlib.Path(__file__).parents[2]
-project_setting = partial(setting, base_dir=BASE_DIR, filename="{{cookiecutter.project_name}}.yml")
+project_setting = partial(setting, base_dir=BASE_DIR, filename="cc_bz_project_name.yml")
 django_stubs_ext.monkeypatch()
 
 # region Security
@@ -39,21 +39,24 @@ if BASE_SCHEME == "https":
 
 # region Application definition
 DEBUG = project_setting("DEBUG", sections=["project", "app"], rtype=bool, default=True)
-BASE_DOMAIN = project_setting(
-    "BASE_DOMAIN", sections=["project", "servers"], default="localhost"
+ALLOWED_HOSTS = project_setting(
+    "ALLOWED_HOSTS",
+    sections=["project", "servers"],
+    rtype=list,
+    default=["localhost", "127.0.0.1"],
 )
+BASE_DOMAIN = ALLOWED_HOSTS[0]
 BASE_PORT = project_setting(
     "BASE_PORT", sections=["project", "servers"], rtype=int, default=8000
 )
-ALLOWED_HOSTS = [BASE_DOMAIN]
 
-AUTH_USER_MODEL = "registration.User"
+AUTH_USER_MODEL = "accounts.User"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-ROOT_URLCONF = "{{cookiecutter.project_name}}.urls"
+ROOT_URLCONF = "cc_bz_project_name.urls"
 
 INSTALLED_APPS = [
     "django.contrib.contenttypes",
-    "{{cookiecutter.project_name}}.branding",
+    "cc_bz_project_name.branding",
     "grappelli.dashboard",
     "grappelli",
     "django.contrib.admin",
@@ -61,21 +64,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "{{cookiecutter.project_name}}.lib",
-    "{{cookiecutter.project_name}}.registration",
-    "{{cookiecutter.project_name}}.home",
+    "cc_bz_project_name.lib",
+    "cc_bz_project_name.accounts",
+    "cc_bz_project_name.home",
 ]
 
 if DEBUG:
     INSTALLED_APPS += [
         "django_extensions",
-    ]
-    RUNSERVER_PLUS_EXTRA_FILES = [
-        "kuma.yml",
-        *(BASE_DIR.glob("**/templates/**/*.html")),
-        *(BASE_DIR.glob("**/static/*/css/*")),
-        *(BASE_DIR.glob("**/static/*/js/*")),
-        *(BASE_DIR.glob("**/static/*/img/*")),
     ]
 
 MIDDLEWARE = [
@@ -112,11 +108,24 @@ MIGRATION_HASHES_PATH = BASE_DIR.joinpath("migrations.lock")
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+OPTIMUS_PRIME = project_setting(
+    "OPTIMUS_PRIME", sections=["project", "app", "optimus"], rtype=int, default=1
+)
+OPTIMUS_INVERSE = project_setting(
+    "OPTIMUS_INVERSE", sections=["project", "app", "optimus"], rtype=int, default=1
+)
+OPTIMUS_RANDOM = project_setting(
+    "OPTIMUS_RANDOM", sections=["project", "app", "optimus"], rtype=int, default=0
+)
 # endregion
 
 # region Databases
 DATABASES = {
-    "default": {"ENGINE": "django.db.backends.postgresql", "NAME": "{{cookiecutter.project_name}}"},
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "cc_bz_project_name",
+    },
 }
 # endregion
 
@@ -147,9 +156,9 @@ USE_TZ = True
 # endregion
 
 # region 3rd party
-GRAPPELLI_INDEX_DASHBOARD = "{{cookiecutter.project_name}}.home.dashboard.AdminDashboard"
-GRAPPELLI_ADMIN_TITLE = "{{cookiecutter.project_name}}"
+GRAPPELLI_INDEX_DASHBOARD = "cc_bz_project_name.home.dashboard.AdminDashboard"
+GRAPPELLI_ADMIN_TITLE = "cc_bz_project_name"
 # endregion
 
 with contextlib.suppress(ImportError):
-    from {{cookiecutter.project_name}}.local.settings import *  # noqa: F403
+    from cc_bz_project_name.local.settings import *  # noqa: F403

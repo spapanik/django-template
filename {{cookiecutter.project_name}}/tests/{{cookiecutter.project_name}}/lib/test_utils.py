@@ -3,9 +3,22 @@ from collections import defaultdict
 from pathlib import Path
 
 import pytest
-from django.conf import settings
+from django.test import override_settings
 
-from {{cookiecutter.project_name}}.lib import utils
+from cc_bz_project_name.lib import utils
+
+
+@pytest.mark.parametrize("n", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+@override_settings(
+    OPTIMUS_PRIME=3763233884940218597,
+    OPTIMUS_INVERSE=8559198950554358756,
+    OPTIMUS_RANDOM=2911243570405232861,
+)
+def test_optimus(n: int) -> None:
+    optimus = utils.Optimus()
+    encoded = optimus.encode(n)
+    assert encoded != n
+    assert optimus.decode(encoded) == n
 
 
 def test_handle_exceptions_handled_exception() -> None:
@@ -53,5 +66,5 @@ def test_hash_migrations() -> None:
     for hashed_migration in utils.hash_migrations():
         app, name, _ = hashed_migration.split("::")
         hashed_migrations[app].append(name)
-    assert "registration" in hashed_migrations
-    assert "0001_initial" in hashed_migrations["registration"]
+    assert "accounts" in hashed_migrations
+    assert "0001_initial" in hashed_migrations["accounts"]

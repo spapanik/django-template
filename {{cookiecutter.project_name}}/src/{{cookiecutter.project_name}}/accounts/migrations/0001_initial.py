@@ -1,13 +1,12 @@
-import uuid
-
 import django.utils.timezone
 from django.db import migrations, models
 
-import {{cookiecutter.project_name}}.lib.date_utils
-import {{cookiecutter.project_name}}.registration.models
+import cc_bz_project_name.accounts.models
+import cc_bz_project_name.lib.date_utils
 
 
 class Migration(migrations.Migration):
+
     initial = True
 
     dependencies = [
@@ -64,14 +63,17 @@ class Migration(migrations.Migration):
                         default=django.utils.timezone.now, verbose_name="date joined"
                     ),
                 ),
-                ("uuid", models.UUIDField(default=uuid.uuid4, editable=False)),
                 (
                     "created_at",
-                    models.DateTimeField(default={{cookiecutter.project_name}}.lib.date_utils.now, editable=False),
+                    models.DateTimeField(
+                        default=cc_bz_project_name.lib.date_utils.now, editable=False
+                    ),
                 ),
                 (
                     "updated_at",
-                    models.DateTimeField(default={{cookiecutter.project_name}}.lib.date_utils.now, editable=False),
+                    models.DateTimeField(
+                        default=cc_bz_project_name.lib.date_utils.now, editable=False
+                    ),
                 ),
                 ("email", models.EmailField(max_length=254, unique=True)),
                 (
@@ -104,7 +106,7 @@ class Migration(migrations.Migration):
                 "swappable": "AUTH_USER_MODEL",
             },
             managers=[
-                ("objects", {{cookiecutter.project_name}}.registration.models.UserManager()),
+                ("objects", cc_bz_project_name.accounts.models.UserManager()),
             ],
         ),
     ]

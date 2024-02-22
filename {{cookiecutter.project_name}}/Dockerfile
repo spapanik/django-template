@@ -1,8 +1,8 @@
 FROM spapanik/django-app:1.4.0
 
-ENV WEBSERVER="/home/${DJANGO_USER}/{{cookiecutter.project_name}}"
+ENV WEBSERVER="/home/${DJANGO_USER}/cc_bz_project_name"
 ENV PYTHONBREAKPOINT=ipdb.set_trace
-ENV DJANGO_SETTINGS_MODULE={{cookiecutter.project_name}}.settings
+ENV DJANGO_SETTINGS_MODULE=cc_bz_project_name.settings
 ENV webserver_netloc="0.0.0.0:8000"
 
 USER ${DJANGO_USER}

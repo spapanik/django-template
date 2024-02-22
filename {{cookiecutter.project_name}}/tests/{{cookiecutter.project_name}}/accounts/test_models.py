@@ -3,7 +3,7 @@ from typing import Any
 
 import pytest
 
-from {{cookiecutter.project_name}}.registration.models import User
+from cc_bz_project_name.accounts.models import User
 
 
 @pytest.mark.django_db()

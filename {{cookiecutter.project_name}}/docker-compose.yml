@@ -5,11 +5,11 @@ services:
     platform: linux/amd64
     image: postgres:15.2
     environment:
-      POSTGRES_USER: {{cookiecutter.project_name}}
-      POSTGRES_DB: {{cookiecutter.project_name}}
+      POSTGRES_USER: cc_bz_project_name
+      POSTGRES_DB: cc_bz_project_name
       POSTGRES_PASSWORD: M6hzeBBQxdNi4eYVY6GD
     volumes:
-      - {{cookiecutter.project_name}}-pgdata:/var/lib/postgresql/data
+      - cc_bz_project_name-pgdata:/var/lib/postgresql/data
     expose:
       - "5432"
 
@@ -23,10 +23,10 @@ services:
       context: .
     environment:
       - PGHOST=database
-      - PGUSER={{cookiecutter.project_name}}
+      - PGUSER=cc_bz_project_name
       - PGPASSWORD=M6hzeBBQxdNi4eYVY6GD
     ports:
       - "8000:8000"
 
 volumes:
-  {{cookiecutter.project_name}}-pgdata:
+  cc_bz_project_name-pgdata:

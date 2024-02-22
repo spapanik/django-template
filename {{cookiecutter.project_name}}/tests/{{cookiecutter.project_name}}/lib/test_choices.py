@@ -1,6 +1,6 @@
 from enum import auto
 
-from {{cookiecutter.project_name}}.lib import choices
+from cc_bz_project_name.lib import choices
 
 
 class TestChoices:

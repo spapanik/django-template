@@ -4,7 +4,7 @@ from zoneinfo import ZoneInfo
 import pytest
 from freezegun import freeze_time
 
-from {{cookiecutter.project_name}}.lib import date_utils
+from cc_bz_project_name.lib import date_utils
 
 TEST_TIMEZONES = [ZoneInfo("UTC"), ZoneInfo("Europe/London"), ZoneInfo("Asia/Tokyo")]
 

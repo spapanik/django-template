@@ -3,6 +3,6 @@
         "target": "ES2022"
     },
     "include": [
-        "src/{{cookiecutter.project_name}}/*/static/*/js/*.ts"
+        "src/cc_bz_project_name/*/static/*/js/*.ts"
     ]
 }

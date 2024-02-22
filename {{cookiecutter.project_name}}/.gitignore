@@ -15,8 +15,8 @@ __pycache__/
 /.static/
 
 # local dev
-/cookbook.toml.d/
-/{{cookiecutter.project_name}}.yml
+/cookbook.yaml.d/
+/cc_bz_project_name.yml
 local.*
 local/
 
