@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, ClassVar
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
@@ -16,7 +16,8 @@ class UserManager(BaseUserManager.from_queryset(BaseQuerySet["User"])):  # type:
         self, email: str, password: str | None, **extra_fields: Any
     ) -> User:
         if not email:
-            raise ValueError("An email must be set")
+            msg = "An email must be set"
+            raise ValueError(msg)
 
         email = self.normalize_email(email)
         user: User = self.model(email=email, **extra_fields)
@@ -38,9 +39,11 @@ class UserManager(BaseUserManager.from_queryset(BaseQuerySet["User"])):  # type:
         extra_fields.setdefault("is_superuser", True)
 
         if extra_fields.get("is_staff") is not True:
-            raise ValueError("Superuser must have is_staff=True.")
+            msg = "Superuser must have is_staff=True."
+            raise ValueError(msg)
         if extra_fields.get("is_superuser") is not True:
-            raise ValueError("Superuser must have is_superuser=True.")
+            msg = "Superuser must have is_superuser=True."
+            raise ValueError(msg)
 
         return self._create_user(email, password, **extra_fields)
 
@@ -52,9 +55,9 @@ class User(AbstractUser, BaseModel):
     email = models.EmailField(unique=True)
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS: list[str] = []
+    REQUIRED_FIELDS: ClassVar[list[str]] = []
 
-    objects = UserManager()
+    objects: ClassVar[UserManager] = UserManager()
 
     class Meta(AbstractUser.Meta):
         swappable = "AUTH_USER_MODEL"

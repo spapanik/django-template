@@ -1,39 +1,19 @@
-from typing import Any
-
-from django.forms import BaseForm
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
-from django.views import View
+from django.shortcuts import get_object_or_404
+from django.views.generic import View
+
+from {{cookiecutter.project_name}}.lib.models import BaseModel
 
 
-class BaseView(View):
-    template_name: str
-
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        return kwargs
-
-    def get_template_name(self, **_kwargs: Any) -> str:
-        return self.template_name
-
-    def render(self, context: dict[str, Any]) -> HttpResponse:
-        template = self.get_template_name(**context)
-        return render(self.request, template, context)
+class DownloadTextFileView(View):
+    model: type[BaseModel]
 
     def get(
-        self, request: HttpRequest, *_args: Any, **kwargs: Any  # noqa: ARG002
+        self, _request: HttpRequest, obj_id: int, field: str, filename: str
     ) -> HttpResponse:
-        context = self.get_context_data(**kwargs)
-        return self.render(context)
+        obj = get_object_or_404(self.model, pk=obj_id)
 
+        response = HttpResponse(getattr(obj, field), content_type="text/plain")
+        response["Content-Disposition"] = f"attachment; filename={filename}"
 
-class BaseFormView(BaseView):
-    form_class: type[BaseForm]
-
-    @property
-    def get_form(self) -> type[BaseForm]:
-        return self.form_class
-
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["form"] = self.get_form()
-        return context
+        return response

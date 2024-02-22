@@ -3,10 +3,10 @@ import pathlib
 from functools import partial
 
 import django_stubs_ext
-from dj_settings.utils import setting
+from dj_settings import get_setting
 
 BASE_DIR = pathlib.Path(__file__).parents[2]
-project_setting = partial(setting, base_dir=BASE_DIR, filename="{{cookiecutter.project_name}}.yml")
+project_setting = partial(get_setting, project_dir=BASE_DIR, filename="django_ca.yml")
 django_stubs_ext.monkeypatch()
 
 # region Security
@@ -45,9 +45,15 @@ BASE_DOMAIN = project_setting(
 BASE_PORT = project_setting(
     "BASE_PORT", sections=["project", "servers"], rtype=int, default=8000
 )
-ALLOWED_HOSTS = [BASE_DOMAIN]
+EXTRA_DOMAINS = project_setting(
+    "EXTRA_DOMAINS",
+    sections=["project", "servers"],
+    rtype=list,
+    default=["127.0.0.1"],
+)
+ALLOWED_HOSTS = [BASE_DOMAIN, *EXTRA_DOMAINS]
 
-AUTH_USER_MODEL = "registration.User"
+AUTH_USER_MODEL = "accounts.User"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 ROOT_URLCONF = "{{cookiecutter.project_name}}.urls"
 
@@ -62,20 +68,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "{{cookiecutter.project_name}}.lib",
-    "{{cookiecutter.project_name}}.registration",
+    "{{cookiecutter.project_name}}.accounts",
     "{{cookiecutter.project_name}}.home",
 ]
 
 if DEBUG:
     INSTALLED_APPS += [
         "django_extensions",
-    ]
-    RUNSERVER_PLUS_EXTRA_FILES = [
-        "kuma.yml",
-        *(BASE_DIR.glob("**/templates/**/*.html")),
-        *(BASE_DIR.glob("**/static/*/css/*")),
-        *(BASE_DIR.glob("**/static/*/js/*")),
-        *(BASE_DIR.glob("**/static/*/img/*")),
     ]
 
 MIDDLEWARE = [
@@ -112,11 +111,24 @@ MIGRATION_HASHES_PATH = BASE_DIR.joinpath("migrations.lock")
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+OPTIMUS_PRIME = project_setting(
+    "OPTIMUS_PRIME", sections=["project", "app", "optimus"], rtype=int, default=1
+)
+OPTIMUS_INVERSE = project_setting(
+    "OPTIMUS_INVERSE", sections=["project", "app", "optimus"], rtype=int, default=1
+)
+OPTIMUS_RANDOM = project_setting(
+    "OPTIMUS_RANDOM", sections=["project", "app", "optimus"], rtype=int, default=0
+)
 # endregion
 
 # region Databases
 DATABASES = {
-    "default": {"ENGINE": "django.db.backends.postgresql", "NAME": "{{cookiecutter.project_name}}"},
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "{{cookiecutter.project_name}}",
+    },
 }
 # endregion
 
@@ -143,7 +155,6 @@ LANGUAGES = [("en", "English")]
 LOCALE_PATHS = [BASE_DIR.joinpath("locale")]
 
 TIME_ZONE = "UTC"
-USE_TZ = True
 # endregion
 
 # region 3rd party
