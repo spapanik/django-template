@@ -7,18 +7,10 @@ __pycache__/
 
 # installation artifacts
 .yamk/
-/node_modules/
-
-# static
-/src/**/*.js
-/src/**/*.css
-/.static/
 
 # local dev
+.ssl/
 /cookbook.yaml.d/
 /{{cookiecutter.project_name}}.yml
 local.*
 local/
-
-# translations
-*.mo

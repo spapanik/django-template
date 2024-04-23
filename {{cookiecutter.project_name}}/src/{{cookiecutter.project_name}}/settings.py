@@ -1,12 +1,15 @@
 import contextlib
 import pathlib
+from datetime import timedelta
 from functools import partial
 
 import django_stubs_ext
 from dj_settings import get_setting
 
 BASE_DIR = pathlib.Path(__file__).parents[2]
-project_setting = partial(get_setting, project_dir=BASE_DIR, filename="django_ca.yml")
+project_setting = partial(
+    get_setting, project_dir=BASE_DIR, filename="{{cookiecutter.project_name}}.yml"
+)
 django_stubs_ext.monkeypatch()
 
 # region Security
@@ -35,40 +38,77 @@ if BASE_SCHEME == "https":
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+
+signup_token_expiry = project_setting(
+    "SIGNUP_TOKEN_EXPIRY",
+    sections=["project", "tokens"],
+    rtype=dict,
+    default={"days": 31},
+)
+SIGNUP_TOKEN_EXPIRY = timedelta(**signup_token_expiry)
+access_token_expiry = project_setting(
+    "ACCESS_TOKEN_EXPIRY",
+    sections=["project", "tokens"],
+    rtype=dict,
+    default={"days": 365},
+)
+ACCESS_TOKEN_EXPIRY = timedelta(**access_token_expiry)
+refresh_token_expiry = project_setting(
+    "REFRESH_TOKEN_EXPIRY",
+    sections=["project", "tokens"],
+    rtype=dict,
+    default={"days": 3650},
+)
+REFRESH_TOKEN_EXPIRY = timedelta(**refresh_token_expiry)
 # endregion
 
 # region Application definition
 DEBUG = project_setting("DEBUG", sections=["project", "app"], rtype=bool, default=True)
-BASE_DOMAIN = project_setting(
-    "BASE_DOMAIN", sections=["project", "servers"], default="localhost"
+BARE_DOMAIN = project_setting(
+    "BARE_DOMAIN", sections=["project", "servers"], default="localhost"
 )
-BASE_PORT = project_setting(
-    "BASE_PORT", sections=["project", "servers"], rtype=int, default=8000
+BASE_API_DOMAIN = project_setting(
+    "BASE_API_DOMAIN", sections=["project", "servers"], default="localhost"
 )
-EXTRA_DOMAINS = project_setting(
-    "EXTRA_DOMAINS",
+BASE_API_PORT = project_setting(
+    "BASE_API_PORT", sections=["project", "servers"], rtype=int, default=8000
+)
+EXTRA_API_DOMAINS = project_setting(
+    "EXTRA_API_DOMAINS",
     sections=["project", "servers"],
     rtype=list,
     default=["127.0.0.1"],
 )
-ALLOWED_HOSTS = [BASE_DOMAIN, *EXTRA_DOMAINS]
+BASE_APP_DOMAIN = project_setting(
+    "BASE_APP_DOMAIN", sections=["project", "servers"], default="localhost"
+)
+BASE_APP_PORT = project_setting(
+    "BASE_APP_PORT", sections=["project", "servers"], rtype=int, default=3000
+)
+EXTRA_APP_DOMAINS = project_setting(
+    "EXTRA_APP_DOMAINS",
+    sections=["project", "servers"],
+    rtype=list,
+    default=["127.0.0.1"],
+)
+ALLOWED_HOSTS = [
+    BASE_API_DOMAIN,
+    *EXTRA_API_DOMAINS,
+    BASE_APP_DOMAIN,
+    *EXTRA_APP_DOMAINS,
+]
 
-AUTH_USER_MODEL = "accounts.User"
+AUTH_USER_MODEL = "users.User"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 ROOT_URLCONF = "{{cookiecutter.project_name}}.urls"
 
 INSTALLED_APPS = [
     "django.contrib.contenttypes",
-    "{{cookiecutter.project_name}}.branding",
-    "grappelli.dashboard",
-    "grappelli",
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles",
     "{{cookiecutter.project_name}}.lib",
-    "{{cookiecutter.project_name}}.accounts",
+    "{{cookiecutter.project_name}}.users",
     "{{cookiecutter.project_name}}.home",
 ]
 
@@ -79,38 +119,13 @@ if DEBUG:
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.locale.LocaleMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-]
-
-TEMPLATES = [
-    {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
-            ]
-        },
-    }
 ]
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = BASE_DIR.joinpath("local", "emails")
 
 MIGRATION_HASHES_PATH = BASE_DIR.joinpath("migrations.lock")
-
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
 
 OPTIMUS_PRIME = project_setting(
     "OPTIMUS_PRIME", sections=["project", "app", "optimus"], rtype=int, default=1
@@ -132,34 +147,8 @@ DATABASES = {
 }
 # endregion
 
-# region Static files
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
-    },
-}
-# endregion
-
-# region Static files
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR.joinpath(".static")
-# endregion
-
 # region i18n/l10n
-LANGUAGE_CODE = "en"
-LANGUAGES = [("en", "English")]
-
-LOCALE_PATHS = [BASE_DIR.joinpath("locale")]
-
 TIME_ZONE = "UTC"
-# endregion
-
-# region 3rd party
-GRAPPELLI_INDEX_DASHBOARD = "{{cookiecutter.project_name}}.home.dashboard.AdminDashboard"
-GRAPPELLI_ADMIN_TITLE = "{{cookiecutter.project_name}}"
 # endregion
 
 with contextlib.suppress(ImportError):

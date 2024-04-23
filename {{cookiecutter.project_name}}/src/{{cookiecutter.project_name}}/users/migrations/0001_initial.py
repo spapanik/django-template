@@ -1,8 +1,11 @@
+import django.db.models.deletion
 import django.utils.timezone
+from django.conf import settings
 from django.db import migrations, models
 
-import {{cookiecutter.project_name}}.accounts.models
 import {{cookiecutter.project_name}}.lib.date_utils
+import {{cookiecutter.project_name}}.lib.models
+import {{cookiecutter.project_name}}.users.models
 
 
 class Migration(migrations.Migration):
@@ -106,7 +109,44 @@ class Migration(migrations.Migration):
                 "swappable": "AUTH_USER_MODEL",
             },
             managers=[
-                ("objects", {{cookiecutter.project_name}}.accounts.models.UserManager()),
+                ("objects", {{cookiecutter.project_name}}.users.models.UserManager()),
             ],
+        ),
+        migrations.CreateModel(
+            name="SignupToken",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        default={{cookiecutter.project_name}}.lib.date_utils.now, editable=False
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(
+                        default={{cookiecutter.project_name}}.lib.date_utils.now, editable=False
+                    ),
+                ),
+                (
+                    "user",
+                    {{cookiecutter.project_name}}.lib.models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="signup_token",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+            ],
+            options={
+                "abstract": False,
+            },
         ),
     ]

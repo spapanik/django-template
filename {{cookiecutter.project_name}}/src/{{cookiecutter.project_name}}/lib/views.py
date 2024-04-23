@@ -1,19 +1,64 @@
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404
-from django.views.generic import View
+import json
+from http import HTTPStatus
+from typing import Any, cast
 
-from {{cookiecutter.project_name}}.lib.models import BaseModel
+from django.contrib.auth.models import AnonymousUser
+from django.http import HttpRequest
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
+
+from {{cookiecutter.project_name}}.lib.exceptions import ValidationError
+from {{cookiecutter.project_name}}.lib.http import JsonResponse
+from {{cookiecutter.project_name}}.lib.types import JSONType
+from {{cookiecutter.project_name}}.users.models import User
 
 
-class DownloadTextFileView(View):
-    model: type[BaseModel]
+class BaseAPIView(View):
+    def json_body(self) -> JSONType:
+        try:
+            data = json.loads(self.request.body)
+        except (json.JSONDecodeError, TypeError) as exc:
+            msg = "Invalid JSON"
+            raise ValidationError(msg) from exc
 
-    def get(
-        self, _request: HttpRequest, obj_id: int, field: str, filename: str
-    ) -> HttpResponse:
-        obj = get_object_or_404(self.model, pk=obj_id)
+        return cast(JSONType, data)
 
-        response = HttpResponse(getattr(obj, field), content_type="text/plain")
-        response["Content-Disposition"] = f"attachment; filename={filename}"
+    @staticmethod
+    def has_permissions(_user: User | AnonymousUser) -> bool:
+        return True
 
-        return response
+    @csrf_exempt
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> JsonResponse:
+        user: User | AnonymousUser
+        try:
+            user = User.from_request(request)
+        except LookupError:
+            user = AnonymousUser()
+        if self.has_permissions(user):
+            self.request.user = user
+            return cast(JsonResponse, super().dispatch(request, *args, **kwargs))
+        if user.is_anonymous:
+            return JsonResponse(
+                {"error": {"message": "You must be logged in to perform this action."}},
+                status=HTTPStatus.UNAUTHORIZED,
+            )
+        return JsonResponse(
+            {
+                "error": {
+                    "message": "You do not have permission to perform this action."
+                }
+            },
+            status=HTTPStatus.FORBIDDEN,
+        )
+
+
+class BaseAuthenticatedAPIView(BaseAPIView):
+    @staticmethod
+    def has_permissions(user: User | AnonymousUser) -> bool:
+        return user.is_authenticated
+
+
+class BaseStaffAPIView(BaseAPIView):
+    @staticmethod
+    def has_permissions(user: User | AnonymousUser) -> bool:
+        return user.is_staff

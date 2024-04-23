@@ -1,19 +1,56 @@
 import hashlib
 import logging
 from collections.abc import Callable
+from dataclasses import asdict, dataclass
 from functools import wraps
 from pathlib import Path
-from typing import ParamSpec, TypeVar
+from typing import TYPE_CHECKING, Literal, ParamSpec, Self, TypeVar, cast
+
+from joselib import jwt
+from pathurl import URL, Query
 
 from django.conf import settings
 from django.db.migrations.loader import MigrationLoader
 from django.db.migrations.writer import MigrationWriter
-from pathurl import URL, Query
+
+from {{cookiecutter.project_name}}.lib.date_utils import now
+
+if TYPE_CHECKING:
+    from {{cookiecutter.project_name}}.users.models import User
 
 logger = logging.getLogger(__name__)
 INGEST_ERROR = "Function `%s` threw `%s` when called with args=%s and kwargs=%s"
 P = ParamSpec("P")
 R_co = TypeVar("R_co", covariant=True)
+
+
+@dataclass
+class JWT:
+    sub: Literal["access", "refresh"]
+    id: int
+    exp: int
+
+    @classmethod
+    def for_user(cls, user: "User", jwt_type: Literal["access", "refresh"]) -> Self:
+        expiry_delta = (
+            settings.REFRESH_TOKEN_EXPIRY
+            if jwt_type == "refresh"
+            else settings.ACCESS_TOKEN_EXPIRY
+        )
+        return cls(
+            sub=jwt_type,
+            id=user.oid,
+            exp=int((now() + expiry_delta).timestamp()),
+        )
+
+    @classmethod
+    def from_token(cls, token: str) -> Self:
+        return cls(**jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"]))  # type: ignore[no-untyped-call]
+
+    def __str__(self) -> str:
+        return cast(
+            str, jwt.encode(asdict(self), settings.SECRET_KEY, algorithm="HS256")  # type: ignore[no-untyped-call]
+        )
 
 
 class Optimus:
@@ -60,8 +97,8 @@ def handle_exceptions(
 def get_app_url(path: str, **kwargs: str | list[str]) -> URL:
     return URL.from_parts(
         scheme=settings.BASE_SCHEME,
-        hostname=settings.BASE_DOMAIN,
-        port=settings.BASE_PORT,
+        hostname=settings.BASE_APP_DOMAIN,
+        port=settings.BASE_APP_PORT,
         path=path,
         query=Query.from_dict(dict_={}, **kwargs),
     )

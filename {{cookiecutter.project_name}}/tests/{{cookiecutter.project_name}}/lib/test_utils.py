@@ -3,6 +3,7 @@ from collections import defaultdict
 from pathlib import Path
 
 import pytest
+
 from django.test import override_settings
 
 from {{cookiecutter.project_name}}.lib import utils
@@ -39,7 +40,7 @@ def test_handle_exceptions_unhandled_exception() -> None:
     pytest.raises(ZeroDivisionError, invert, 0)
 
 
-@override_settings(BASE_DOMAIN="www.example.com", BASE_PORT=443)
+@override_settings(BASE_APP_DOMAIN="www.example.com", BASE_APP_PORT=443)
 @pytest.mark.parametrize(
     ("path", "kwargs", "expected"),
     [
@@ -66,5 +67,5 @@ def test_hash_migrations() -> None:
     for hashed_migration in utils.hash_migrations():
         app, name, _ = hashed_migration.split("::")
         hashed_migrations[app].append(name)
-    assert "accounts" in hashed_migrations
-    assert "0001_initial" in hashed_migrations["accounts"]
+    assert "users" in hashed_migrations
+    assert "0001_initial" in hashed_migrations["users"]

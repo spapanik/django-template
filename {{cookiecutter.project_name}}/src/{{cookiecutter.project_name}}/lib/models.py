@@ -5,6 +5,7 @@ from django.db import models
 
 from {{cookiecutter.project_name}}.lib.date_utils import now
 from {{cookiecutter.project_name}}.lib.types import OnDeleteType
+from {{cookiecutter.project_name}}.lib.utils import Optimus
 
 _T_co = TypeVar("_T_co", bound=models.Model, covariant=True)
 _ST = TypeVar("_ST")
@@ -90,6 +91,14 @@ class BaseQuerySet(models.QuerySet[_T_co]):
     def random(self) -> _T_co | None:
         return self.order_by("?").first()
 
+    def get_by_oid(self, oid: int) -> _T_co:
+        optimus = Optimus()
+        return self.get(id=optimus.decode(oid))
+
+    def filter_by_oid(self, oid: list[int]) -> Self:
+        optimus = Optimus()
+        return self.filter(id={optimus.decode(oid_) for oid_ in oid})
+
     def update(self, **kwargs: Any) -> int:
         kwargs.setdefault("updated_at", now())
         return super().update(**kwargs)
@@ -100,6 +109,11 @@ class BaseModel(models.Model):
     updated_at = models.DateTimeField(default=now, editable=False)
 
     objects: ClassVar[models.Manager[Self]] = BaseQuerySet.as_manager()
+
+    @property
+    def oid(self) -> int:
+        optimus = Optimus()
+        return optimus.encode(self.id)  # type: ignore[attr-defined]
 
     def save(self, *args: Any, **kwargs: Any) -> None:
         self.updated_at = now()

@@ -31,7 +31,7 @@ class Command(MakeMigrations):
         writer = MigrationWriter(migration, self.include_header)
         subprocess.run(["black", writer.path], check=True)  # noqa: S603,S607
         subprocess.run(
-            ["ruff", "--fix-only", writer.path], check=True  # noqa: S603,S607
+            ["ruff", "check", "--fix-only", writer.path], check=True  # noqa: S603,S607
         )
 
     def write_migration_files(

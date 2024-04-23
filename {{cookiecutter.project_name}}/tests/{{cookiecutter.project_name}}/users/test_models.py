@@ -3,7 +3,9 @@ from typing import Any
 
 import pytest
 
-from {{cookiecutter.project_name}}.accounts.models import User
+from {{cookiecutter.project_name}}.users.models import SignupToken, User
+
+from tests.{{cookiecutter.project_name}}.factories.users import UserFactory
 
 
 @pytest.mark.django_db()
@@ -36,3 +38,21 @@ def test_user_needs_email(superuser: bool) -> None:
     method = User.objects.create_superuser if superuser else User.objects.create_user
     with pytest.raises(ValueError):
         method(email="")
+
+
+@pytest.mark.django_db()
+def test_get_signup_token_creates_a_token() -> None:
+    user = UserFactory.build()
+    user.save()
+    user.get_signup_token()
+    assert SignupToken.objects.filter(user=user).count() == 1
+
+
+@pytest.mark.django_db()
+def test_get_signup_token_creates_new_token_every_time() -> None:
+    user = UserFactory.build()
+    user.save()
+    old_token = user.get_signup_token()
+    old_token_id = old_token.id
+    new_token = user.get_signup_token()
+    assert new_token.id != old_token_id

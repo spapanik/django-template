@@ -1,6 +1,6 @@
 import pytest
 
-from {{cookiecutter.project_name}}.accounts.models import User
+from {{cookiecutter.project_name}}.users.models import User
 
 
 class TestBaseModel:
