@@ -12,5 +12,5 @@ WORKDIR ${WEBSERVER}
 
 RUN yam install_py
 
-CMD yam -bf -r5 migrations && \
+CMD yam -bf migrations && \
     yam -bf runserver

@@ -51,6 +51,7 @@ runserver:
     - install
   commands:
     - >-
+      ${env_vars} ${runner}
       uvicorn
       ${key_file_option}
       ${cert_file_option}

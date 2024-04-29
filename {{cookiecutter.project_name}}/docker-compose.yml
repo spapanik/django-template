@@ -10,13 +10,19 @@ services:
       - {{cookiecutter.project_name}}-pgdata:/var/lib/postgresql/data
     expose:
       - "5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "{{cookiecutter.project_name}}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   webserver:
     platform: linux/amd64
     env_file:
       - .environ
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     build:
       context: .
     environment:
