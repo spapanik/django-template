@@ -4,6 +4,8 @@ from enum import Enum
 from secrets import choice
 from typing import Any, Self
 
+from pyutilkit.date_utils import get_timezones
+
 
 @dataclass(frozen=True)
 class ChoiceValue:
@@ -17,7 +19,8 @@ class Choices(Enum):
     def _generate_next_value_(
         name: str, _start: int, _count: int, _last_values: list[ChoiceValue]
     ) -> ChoiceValue:
-        return ChoiceValue(name, name.title(), name)
+        label = name.replace("_", " ").title()
+        return ChoiceValue(name, label, name)
 
     def __init__(self, value: ChoiceValue):
         self.key = value.key

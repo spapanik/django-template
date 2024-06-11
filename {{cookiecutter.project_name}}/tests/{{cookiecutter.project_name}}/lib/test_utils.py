@@ -1,6 +1,4 @@
-import os
 from collections import defaultdict
-from pathlib import Path
 
 import pytest
 
@@ -22,24 +20,6 @@ def test_optimus(n: int) -> None:
     assert optimus.decode(encoded) == n
 
 
-def test_handle_exceptions_handled_exception() -> None:
-    @utils.handle_exceptions(exceptions=(ZeroDivisionError,), default=0.0)
-    def invert(n: int) -> float:
-        return 1 / n
-
-    assert invert(1) == 1
-    assert invert(0) == 0
-
-
-def test_handle_exceptions_unhandled_exception() -> None:
-    @utils.handle_exceptions(exceptions=(TypeError,), default=0.0)
-    def invert(n: int) -> float:
-        return 1 / n
-
-    assert invert(1) == 1
-    pytest.raises(ZeroDivisionError, invert, 0)
-
-
 @override_settings(BASE_APP_DOMAIN="www.example.com", BASE_APP_PORT=443)
 @pytest.mark.parametrize(
     ("path", "kwargs", "expected"),
@@ -55,11 +35,6 @@ def test_handle_exceptions_unhandled_exception() -> None:
 )
 def test_get_app_url(path: str, kwargs: dict[str, str], expected: str) -> None:
     assert utils.get_app_url(path, **kwargs).string == expected
-
-
-def test_hash_file() -> None:
-    dev_null_hash = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    assert utils.hash_file(Path(os.devnull)) == dev_null_hash
 
 
 def test_hash_migrations() -> None:

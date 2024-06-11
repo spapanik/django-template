@@ -4,7 +4,6 @@
 [![build automation: yam][yam_badge]][yam_url]
 [![Lint: ruff][ruff_badge]][ruff_url]
 
-
 ## Installation
 
 ### External tools
@@ -24,12 +23,12 @@ in the virtualenv, but this may create conflicts with their dependencies.
 
 The external tools that are assumed to be installed are:
 
-- [nginx]
-- [postgres]
-- [npm]
-- [yamk]
-- [pyenv]
-- [poetry]
+-   [nginx]
+-   [postgres]
+-   [npm]
+-   [yamk]
+-   [pyenv]
+-   [poetry]
 
 We also assume that the postgres user has admin capabilities, and the
 user can use them non-interactively.
@@ -42,8 +41,8 @@ environment, which can be done by:
 As the site is HTTPS-only, there must be a certificate for it. There are
 two good ways to do it:
 
-- Use [ngrok]
-- Use [easyCA]
+-   Use [ngrok]
+-   Use [easyCA]
 
 Ngrok will use ngrok's certificate, and easyCA will create a root
 certificate that you'll need to install, and then change your `nginx`
@@ -56,7 +55,7 @@ Although poetry does create a virtual env, all the commands assume the
 existence of one, so it's better to actually create one. Assuming that
 you're already in the cloned directory:
 
-``` console
+```console
 $ pyenv install 3.12
 $ pyenv shell 3.12
 $ python -m venv ~/.local/share/venv/{{cookiecutter.project_name}}
@@ -66,7 +65,7 @@ $ . ~/.local/share/venv/{{cookiecutter.project_name}}
 If everything is present, the only thing that needs to be done is to use
 yam to install the project:
 
-``` console
+```console
 $ yam install
 ```
 
@@ -76,7 +75,7 @@ $ yam install
 
 After a successful installation, try getting the server up by:
 
-``` console
+```console
 $ yam runserver
 ```
 
@@ -88,14 +87,16 @@ project.
 After the first installation, you can start the server by visiting the
 cloned repo, and doing the following:
 
-``` console
+```console
+$ . ~/.local/share/venvs/{{cookiecutter.project_name}}/bin/activate  # or the name of the virtualenv
 $ yam runserver
 ```
 
 There is hot reloading, and yam takes care of all the dependencies
 issues. If there are unapplied migrations, you can apply them by:
 
-``` console
+```console
+$ . ~/.local/share/venvs/{{cookiecutter.project_name}}/bin/activate  # or the name of the virtualenv
 $ yam migrations
 ```
 
@@ -104,7 +105,8 @@ $ yam migrations
 To run the local django shell, if you're inside the virtual environment,
 you can just run:
 
-``` console
+```console
+$ . ~/.local/share/venvs/{{cookiecutter.project_name}}/bin/activate  # or the name of the virtualenv
 $ yam shell
 ```
 
@@ -112,7 +114,8 @@ $ yam shell
 
 To fix some simple linting errors, run:
 
-``` console
+```console
+$ . ~/.local/share/venvs/{{cookiecutter.project_name}}/bin/activate  # or the name of the virtualenv
 $ yam format
 ```
 
@@ -120,7 +123,8 @@ $ yam format
 
 To run the linting and the tests, run:
 
-``` console
+```console
+$ . ~/.local/share/venvs/{{cookiecutter.project_name}}/bin/activate  # or the name of the virtualenv
 $ yam lint
 $ yam tests
 ```
@@ -129,7 +133,8 @@ $ yam tests
 
 Updating the project can be done by yam:
 
-``` console
+```console
+$ . ~/.local/share/venvs/{{cookiecutter.project_name}}/bin/activate  # or the name of the virtualenv
 $ yam update
 ```
 

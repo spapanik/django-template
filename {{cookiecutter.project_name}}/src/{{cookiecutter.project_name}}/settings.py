@@ -7,6 +7,7 @@ import django_stubs_ext
 from dj_settings import get_setting
 
 BASE_DIR = pathlib.Path(__file__).parents[2]
+{{cookiecutter.project_name}}
 project_setting = partial(
     get_setting, project_dir=BASE_DIR, filename="{{cookiecutter.project_name}}.yml"
 )
@@ -64,9 +65,6 @@ REFRESH_TOKEN_EXPIRY = timedelta(**refresh_token_expiry)
 
 # region Application definition
 DEBUG = project_setting("DEBUG", sections=["project", "app"], rtype=bool, default=True)
-BARE_DOMAIN = project_setting(
-    "BARE_DOMAIN", sections=["project", "servers"], default="localhost"
-)
 BASE_API_DOMAIN = project_setting(
     "BASE_API_DOMAIN", sections=["project", "servers"], default="localhost"
 )
@@ -83,7 +81,7 @@ BASE_APP_DOMAIN = project_setting(
     "BASE_APP_DOMAIN", sections=["project", "servers"], default="localhost"
 )
 BASE_APP_PORT = project_setting(
-    "BASE_APP_PORT", sections=["project", "servers"], rtype=int, default=3000
+    "BASE_APP_PORT", sections=["project", "servers"], rtype=int, default=5173
 )
 EXTRA_APP_DOMAINS = project_setting(
     "EXTRA_APP_DOMAINS",
@@ -107,6 +105,7 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "corsheaders",
     "{{cookiecutter.project_name}}.lib",
     "{{cookiecutter.project_name}}.users",
     "{{cookiecutter.project_name}}.home",
@@ -120,7 +119,11 @@ if DEBUG:
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
+
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOWED_ORIGINS = [f"https://{BASE_APP_DOMAIN}:{BASE_APP_PORT}"]
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = BASE_DIR.joinpath("local", "emails")

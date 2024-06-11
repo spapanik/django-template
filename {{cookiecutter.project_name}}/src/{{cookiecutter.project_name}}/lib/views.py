@@ -1,4 +1,3 @@
-import json
 from http import HTTPStatus
 from typing import Any, cast
 
@@ -7,22 +6,11 @@ from django.http import HttpRequest
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
-from {{cookiecutter.project_name}}.lib.exceptions import ValidationError
 from {{cookiecutter.project_name}}.lib.http import JsonResponse
-from {{cookiecutter.project_name}}.lib.types import JSONType
 from {{cookiecutter.project_name}}.users.models import User
 
 
 class BaseAPIView(View):
-    def json_body(self) -> JSONType:
-        try:
-            data = json.loads(self.request.body)
-        except (json.JSONDecodeError, TypeError) as exc:
-            msg = "Invalid JSON"
-            raise ValidationError(msg) from exc
-
-        return cast(JSONType, data)
-
     @staticmethod
     def has_permissions(_user: User | AnonymousUser) -> bool:
         return True

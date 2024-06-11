@@ -1,7 +1,7 @@
-==========
-Quickstart
-==========
+# Quickstart
 
-.. code-block:: console
+Cookiecut the project and follow the prompt:
 
-    $ cookiecutter https://github.com/spapanik/django-template.git
+```console
+$ cookiecutter https://github.com/spapanik/django-template.git
+```

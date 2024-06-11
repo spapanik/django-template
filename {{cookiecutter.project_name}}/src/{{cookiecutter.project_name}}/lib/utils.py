@@ -1,33 +1,24 @@
-import hashlib
-import logging
-from collections.abc import Callable
 from dataclasses import asdict, dataclass
-from functools import wraps
 from pathlib import Path
-from typing import TYPE_CHECKING, Literal, ParamSpec, Self, TypeVar, cast
+from typing import TYPE_CHECKING, Literal, Self, cast
 
 from joselib import jwt
 from pathurl import URL, Query
+from pyutilkit.date_utils import now
+from pyutilkit.files import hash_file
 
 from django.conf import settings
 from django.db.migrations.loader import MigrationLoader
 from django.db.migrations.writer import MigrationWriter
 
-from {{cookiecutter.project_name}}.lib.date_utils import now
-
 if TYPE_CHECKING:
     from {{cookiecutter.project_name}}.users.models import User
 
-logger = logging.getLogger(__name__)
-INGEST_ERROR = "Function `%s` threw `%s` when called with args=%s and kwargs=%s"
-P = ParamSpec("P")
-R_co = TypeVar("R_co", covariant=True)
 
-
-@dataclass
+@dataclass(frozen=True, slots=True)
 class JWT:
     sub: Literal["access", "refresh"]
-    id: int
+    email: str
     exp: int
 
     @classmethod
@@ -39,7 +30,7 @@ class JWT:
         )
         return cls(
             sub=jwt_type,
-            id=user.oid,
+            email=user.email,
             exp=int((now() + expiry_delta).timestamp()),
         )
 
@@ -67,33 +58,6 @@ class Optimus:
         return ((n ^ self.random) * self.inverse) % self.max_int
 
 
-def handle_exceptions(
-    *,
-    exceptions: tuple[type[Exception], ...] = (Exception,),
-    default: R_co | None = None,
-    log_level: str = "info",
-) -> Callable[[Callable[P, R_co]], Callable[P, R_co | None]]:
-    def decorator(func: Callable[P, R_co]) -> Callable[P, R_co | None]:
-        @wraps(func)
-        def wrapper(*args: P.args, **kwargs: P.kwargs) -> R_co | None:
-            try:
-                return func(*args, **kwargs)
-            except exceptions as exc:
-                getattr(logger, log_level)(
-                    INGEST_ERROR,
-                    func.__name__,
-                    exc.__class__.__name__,
-                    args,
-                    kwargs,
-                    exc_info=True,
-                )
-                return default
-
-        return wrapper
-
-    return decorator
-
-
 def get_app_url(path: str, **kwargs: str | list[str]) -> URL:
     return URL.from_parts(
         scheme=settings.BASE_SCHEME,
@@ -102,16 +66,6 @@ def get_app_url(path: str, **kwargs: str | list[str]) -> URL:
         path=path,
         query=Query.from_dict(dict_={}, **kwargs),
     )
-
-
-def hash_file(path: Path, buffer_size: int = 2**16) -> str:
-    sha256 = hashlib.sha256()
-
-    with path.open("rb") as f:
-        while data := f.read(buffer_size):
-            sha256.update(data)
-
-    return sha256.hexdigest()
 
 
 def hash_migrations() -> list[str]:

@@ -1,9 +1,10 @@
 from collections.abc import Collection, Iterable
 from typing import Any, ClassVar, Self, TypeVar, cast
 
+from pyutilkit.date_utils import now
+
 from django.db import models
 
-from {{cookiecutter.project_name}}.lib.date_utils import now
 from {{cookiecutter.project_name}}.lib.types import OnDeleteType
 from {{cookiecutter.project_name}}.lib.utils import Optimus
 
